@@ -1,0 +1,19 @@
+#+TITLE: Proof of Concept GnuCash Webinterface
+#+Author: Joshua Bachmeier <joshua@bachmeier.cc>
+
+This may one day be a something truly great.
+
+* Milestones
+  - [ ] Browse accounts and view transactions
+  - [ ] Record simple transactions with a smartphone
+
+* Quickstart
+  #+begin_src sh
+    pip install -r requirements.txt
+    export FLASK_ENV=development
+    flask run
+  #+end_src
+
+* Disclaimer
+  This is (currently) a personal project to play around and satisfy my own everyday needs
+  and intellectual curiosity. Who knows what will become of it?

@@ -1,0 +1,58 @@
+{% extends 'base.j2' %}
+{% block title %}{{ account.fullname }}{% endblock title %}
+{% block content %}
+  <h1>{{ account.fullname }}</h1>
+  <form id="add_transaction" action="{{ url_for('add_transaction') }}" method="post">
+    <input type="hidden" name="account_name" value={{ account.fullname }}>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Beschreibung</th>
+        <th>Betrag</th>
+        <th>Gegenkonto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input form="add_transaction" name="date" type="date"></td>
+        <td><input form="add_transaction" name="description" type="text"></td>
+        <td><input form="add_transaction" name="value" type="number"></td>
+        <td>
+          <select form="add_transaction" name="contra_account_name">
+            {% for contra_account in book.accounts
+              | rejectattr('fullname', 'eq', account.fullname)
+              | rejectattr('placeholder')
+              | selectattr('commodity', 'eq', account.commodity)
+              | sort(attribute='fullname') %}
+              <option value={{ contra_account.fullname }}>{{ contra_account.fullname }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5"><input form="add_transaction" type="submit" value="Submit"></td>
+      </tr>
+      {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num', reverse=True) %}
+        <tr>
+          <td>
+            {{ split.transaction.post_date -}}
+            {%- if split.transaction.num -%}
+              #{{ split.transaction.num}}
+            {% endif %}
+          </td>
+          <td>{{ split.transaction.description }}</td>
+          <td>{{ split.value }}{{ split.transaction.currency.mnemonic | replace('EUR', '€') }}</td>
+          <td>
+            {# List all contra accounts #}
+            {{ split.transaction.splits
+            | map(attribute='account') | map(attribute='fullname')
+            | reject('eq', split.account.fullname)
+            | join(', ') }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

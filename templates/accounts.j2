@@ -1,0 +1,22 @@
+{% extends 'base.j2' %}
+{% block title %}{{ account_name }}{% endblock title %}
+{% block content %}
+  <h1>{{ account_name }}</h1>
+  <ul>
+    {% for account in base_account.children | sort(attribute='name') recursive %}
+      <li>
+        {% if account.placeholder %}
+          {{ account.name }}
+        {% else %}
+          <a href="{{ url_for('show_account') }}/{{ account.fullname | replace(':', '/') }}">
+            {{ account.name }}
+          </a>
+        {% endif %}
+
+        {% if account.children %}
+          <ul>{{ loop(account.children) }}</ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}
