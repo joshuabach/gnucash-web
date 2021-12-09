@@ -7,6 +7,8 @@ class DefaultConfig:
     DB_HOST = '127.0.0.1'
     DB_NAME = 'gnucash'
 
+    AUTH_MECHANISM = 'passthrough'
+
 class ConfigWrapper:
     def __init__(self, app):
         self.app = app
