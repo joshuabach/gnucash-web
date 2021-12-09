@@ -1,3 +1,6 @@
 [submodule "bootstrap"]
 	path = bootstrap
 	url = https://github.com/twbs/bootstrap.git
+[submodule "EncryptedSession"]
+	path = EncryptedSession
+	url = git@github.com:SaintFlipper/EncryptedSession.git
