@@ -7,6 +7,13 @@ from piecash import open_book, Transaction, Split
 from main import app, config, logger
 from auth import requires_auth, get_db_credentials
 
+def parent_accounts(account):
+    if account:
+        yield from parent_accounts(account.parent)
+        yield account
+
+app.jinja_env.filters['parentaccounts'] = parent_accounts
+
 
 @app.route('/accounts/<path:account_name>')
 @app.route('/accounts/', defaults={'account_name': ''})
@@ -17,21 +24,11 @@ def show_account(account_name):
     with open_book(uri_conn=config.DB_URI(*get_db_credentials())) as book:
         account = book.accounts.get(fullname=account_name) if account_name else book.root_account
 
-        # TODO: Support non-placeholder accounts with subaccounts
-        if account.placeholder or account.type == 'ROOT':
-            # List all subaccounts
-            return render_template(
-                'accounts.j2',
-                base_account=account,
-                account_name=account.fullname or 'Book',
-            )
-        else:
-            # List transactions in account
-            return render_template(
-                'account.j2',
-                account=account,
-                book=book,
-            )
+        return render_template(
+            'account.j2',
+            account=account,
+            book=book,
+        )
 
 @app.route('/transaction', methods=['POST'])
 @requires_auth
