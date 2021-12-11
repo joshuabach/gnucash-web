@@ -1,0 +1,34 @@
+.gnc-placeholder[data-bs-toggle].collapsed:before {
+    font-weight: 900;
+    content: "^";
+    color:  #444444;
+    position: relative;
+    left: -4px;
+}
+.gnc-placeholder[data-bs-toggle]:not(.collapsed):before {
+    font-weight: 900;
+    content: "v";
+    color:  #444444;
+    position: relative;
+    left: -4px;
+}
+
+.gnc-account-group {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    padding-right: 0rem;
+
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 0px;
+}
+
+.gnc-account-group + .gnc-placeholder,
+.gnc-account-group + .gnc-account {
+    border-top-width: 1px
+}
+
+a {
+    text-decoration: none
+}

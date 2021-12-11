@@ -3,36 +3,70 @@
 {% block title %}{{ account.fullname or 'Accounts' }}{% endblock title %}
 
 {% block account_header %}
-  {% for parent_account in account | parentaccounts -%}
-    {% if loop.first and loop.last -%}
-      All Accounts
-    {%- elif loop.last -%}
-      {{ parent_account.name }}
-    {%- elif not loop.first -%}
-      <a class="link" href="{{ url_for('show_account', account_name=parent_account.fullname.replace(':', '/')) }}">
-        {{ parent_account.name }}
-      </a>:
-    {%- endif -%}
-  {%- endfor %}
+  <nav style="--bs-breadcrumb-divider: ':';">
+    <ol class="breadcrumb">
+      {% for parent_account in account | parentaccounts -%}
+        {% if loop.first and loop.last -%}
+          <li class="breadcrumb-item active">All Accounts</li>
+        {%- elif loop.last -%}
+          <li class="breadcrumb-item active">{{ parent_account.name }}</li>
+        {%- elif not loop.first -%}
+          <li class="breadcrumb-item">
+            <a class="link"
+               href="{{ url_for('show_account', account_name=parent_account.fullname.replace(':', '/')) }}">
+              {{ parent_account.name }}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor %}
+    </ol>
+  </nav>
 {% endblock account_header %}
+
 {% block content %}
-  <ul>
+  <div class="list-group">
+    {% if account.parent %}
+      {% set balance = account.get_balance() %}
+      <div class="list-group-item">
+        <b>Total</b>
+        <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
+          {{ balance }} {{ account.commodity.mnemonic }}
+        </span>
+      </div>
+    {% endif %}
+
     {% for account in account.children | sort(attribute='name') recursive %}
-      <li>
-        {% if account.placeholder %}
-          {{ account.name }}
-        {% else %}
-          <a href="{{ url_for('show_account') }}/{{ account.fullname | replace(':', '/') }}">
+      {% set balance = account.get_balance() %}
+      {% if account.placeholder %}
+        <div class="list-group-item list-group-item-action collapsed gnc-placeholder"
+             role="button"
+             data-bs-toggle="collapse" href="#{{ account.fullname | replace(':', '-') }}">
+             <a class="link-secondary" href="{{ url_for('show_account') }}{{ account.fullname | replace(':', '/') }}">
+               {{ account.name }}
+             </a>
+             <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
+               {{ balance }} {{ account.commodity.mnemonic }}
+             </span>
+        </div>
+      {% else %}
+        <div class="list-group-item list-group-item-action gnc-account">
+          <a href="{{ url_for('show_account') }}{{ account.fullname | replace(':', '/') }}">
             {{ account.name }}
           </a>
-        {% endif %}
+          <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
+            {{ balance }} {{ account.commodity.mnemonic }}
+          </span>
+        </div>
+      {% endif %}
 
-        {% if account.children %}
-          <ul>{{ loop(account.children) }}</ul>
-        {% endif %}
-      </li>
+      {% if account.children %}
+        <div class="list-group-item list-group collapse gnc-account-group"
+             id="{{ account.fullname | replace(':', '-') }}">
+             {{ loop(account.children) }}
+        </div>
+      {% endif %}
     {% endfor %}
-  </ul>
+  </div>
 
   {% if not account.placeholder and account.parent %}
     <form id="add_transaction" action="{{ url_for('add_transaction') }}" method="post">
