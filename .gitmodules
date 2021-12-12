@@ -4,3 +4,6 @@
 [submodule "EncryptedSession"]
 	path = EncryptedSession
 	url = git@github.com:SaintFlipper/EncryptedSession.git
+[submodule "gnucash"]
+	path = gnucash
+	url = https://github.com/Gnucash/gnucash
