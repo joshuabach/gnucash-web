@@ -28,6 +28,7 @@ def show_account(account_name):
             'account.j2',
             account=account,
             book=book,
+            today=date.today(),
         )
 
 @app.route('/transaction', methods=['POST'])

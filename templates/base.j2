@@ -12,22 +12,21 @@
   </head>
   <body>
     <div class="container">
-      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-sm-between
                      py-3 mb-4 border-bottom">
         <a href="{{ url_for('show_account') }}"
-            class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-          <img class="bi me-2" width="40" height="32" role="img"
-               src="https://gnucash.org/images/gnc-download.png"></img>
-               GnuCash Web
+           class="d-flex align-items-center col-sm-3 mb-2 mb-sm-0 text-dark">
+           <img class="bi me-2" width="40" height="32" role="img" src="https://gnucash.org/images/gnc-download.png">
+           GnuCash Web
         </a>
 
-        <div class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <div class="nav col-12 col-sm-auto mb-2 justify-content-center mb-sm-0">
           {% block account_header %}
             <a href="{{ url_for('show_account') }}" class="nav-link px-2 link-dark">Accounts</a>
           {% endblock account_header %}
         </div>
 
-        <div class="col-md-3 text-end">
+        <div class="col-sm-3 text-end">
           {% if 'username' in session %}
             <form action="{{ url_for('logout') }}" method="POST">
               <input type="submit" class="btn btn-outline-primary me-2" value="Logout">
@@ -42,7 +41,9 @@
     </div>
 
     <main>
-      <div id="content" class="container">{% block content required %}{% endblock %}</div>
+      <div id="content" class="container">
+        {% block content required %}{% endblock %}
+      </div>
     </main>
 
     <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>

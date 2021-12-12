@@ -26,9 +26,18 @@
 
 .gnc-account-group + .gnc-placeholder,
 .gnc-account-group + .gnc-account {
-    border-top-width: 1px
+    border-top-width: 1px;
+}
+
+.gnc-account-nav {
+    --bs-breadcrumb-divider: ':';
 }
 
 a {
-    text-decoration: none
+    text-decoration: none;
+}
+
+.no-text-break {
+    word-break: normal;
+    word-wrap: normal;
 }
