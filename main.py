@@ -24,18 +24,20 @@ CONFIG_FILES = [
 CONFIG_ENVVAR = 'GNUCASH_WEB_CONFIG'
 
 app.config.from_object(DefaultConfig())
-for path in filter(os.path.isfile, CONFIG_FILES):
-    logger.info(f'Reading config file {path}')
-    app.config.from_pyfile(path)
 if CONFIG_ENVVAR in os.environ:
     logger.info(f'Reading config file {CONFIG_ENVVAR}')
-    app.config.from_envvar(CONFIG_ENVVAR)
+    if os.environ[CONFIG_ENVVAR]:
+        app.config.from_envvar(CONFIG_ENVVAR)
+else:
+    for path in filter(os.path.isfile, CONFIG_FILES):
+        logger.info(f'Reading config file {path}')
+        app.config.from_pyfile(path)
 
 config = ConfigWrapper(app)
 
 # We encrypt the session-cookie, so the DB-password is not stored in plaintext when using
 # AUTH_MECHANISM == 'passthrough'.
-app.config['SESSION_CRYPTO_KEY'] = app.config['SECRET_KEY']
+app.config['SESSION_CRYPTO_KEY'] = app.config['SECRET_KEY'] or app.debug and 'DEBUG'
 app.session_interface = EncryptedSessionInterface()
 
 # Now we set the log level to what is configured
