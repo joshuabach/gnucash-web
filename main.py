@@ -12,6 +12,8 @@ from config import ConfigWrapper, DefaultConfig
 # Main Flask Web App
 app = Flask('app')
 
+app.jinja_env.autoescape = True
+
 # Start with a INFO-Logger, so we can log during config parsinig
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -43,4 +45,3 @@ app.session_interface = EncryptedSessionInterface()
 # Now we set the log level to what is configured
 logger.info(f'Log level is {logging.getLevelName(config.EFFECTIVE_LOG_LEVEL)}')
 logger.setLevel(config.EFFECTIVE_LOG_LEVEL)
-

@@ -1,9 +1,12 @@
 from datetime import date
 from decimal import Decimal
+from urllib.parse import quote_plus, unquote_plus
+from itertools import islice
 
 from flask import render_template, url_for, request, redirect, session
 from piecash import open_book, Transaction, Split
-from jinja2 import Environment, BaseLoader
+from jinja2 import Environment, BaseLoader, pass_eval_context
+from markupsafe import Markup, escape
 from babel import numbers
 
 from main import app, config, logger
@@ -16,22 +19,34 @@ def parent_accounts(account):
 
 app.jinja_env.filters['parentaccounts'] = parent_accounts
 
-def money(amount, commodity):
+@pass_eval_context
+def money(eval_ctx, amount, commodity):
     if numbers.get_currency_symbol(commodity.mnemonic) != commodity.mnemonic:
         value = numbers.format_currency(amount, commodity.mnemonic)
     else:
         value = f'{amount} {commodity.mnemonic}'
 
-    return Environment(loader=BaseLoader()).from_string('''
+    if eval_ctx.autoescape:
+        value = escape(value)
+
+    return Markup(Environment(loader=BaseLoader()).from_string('''
       <span class="text-{% if amount >= 0 %}secondary{% else %}danger{% endif %}">
         {{ value }}
       </span>
-    ''').render(amount=amount, value=value)
+    ''').render(amount=amount, value=value))
 
 app.jinja_env.filters['money'] = money
 
 def account_url(account):
-    return url_for('show_account', account_name=account.fullname.replace(':', '/'))
+    # Percent-encode each account name individually (important when account name contains
+    # slashes) and then join with slashes
+    return Markup(url_for(
+        'show_account',
+        account_name='/'.join(
+            quote_plus(account.name)
+            for account in islice(parent_accounts(account), 1, None)  # Skip root account
+        )
+    ))
 
 app.jinja_env.filters['accounturl'] = account_url
 
@@ -39,7 +54,8 @@ app.jinja_env.filters['accounturl'] = account_url
 @app.route('/accounts/', defaults={'account_name': ''})
 @requires_auth
 def show_account(account_name):
-    account_name = account_name.replace('/', ':')
+    # Pendant to `account_url`
+    account_name = ':'.join(unquote_plus(name) for name in account_name.split('/'))
 
     with open_book(uri_conn=config.DB_URI(*get_db_credentials())) as book:
         account = book.accounts.get(fullname=account_name) if account_name else book.root_account

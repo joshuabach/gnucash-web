@@ -1,6 +1,6 @@
 {% extends 'base.j2' %}
 
-{% block title %}{{ account.fullname or 'Accounts' }}{% endblock title %}
+{% block title %}{{ account.fullname or 'Accounts' | display }}{% endblock title %}
 
 {# Account layer navigator in navbar header #}
 {% block account_header %}
@@ -10,12 +10,12 @@
         {% if loop.first and loop.last -%}
           <li class="breadcrumb-item active">All Accounts</li>
         {%- elif loop.last -%}
-          <li class="breadcrumb-item active">{{ parent_account.name }}</li>
+          <li class="breadcrumb-item active">{{ parent_account.name | display }}</li>
         {%- elif not loop.first -%}
           <li class="breadcrumb-item">
             <a class="link"
                href="{{ parent_account | accounturl }}">
-               {{ parent_account.name }}
+               {{ parent_account.name | display }}
             </a>
           </li>
         {%- endif -%}
@@ -47,11 +47,11 @@
              {% if account.children %}
                role="button"
                data-bs-toggle="collapse"
-               href="#{{ account.fullname | replace(':', '-') }}"
+               href="#{{ account.fullname | cssescape }}"
              {% endif %}>
 
           <a {% if account.placeholder %}class="link-secondary"{% endif %} href="{{ account | accounturl }}">
-            {{ account.name }}
+            {{ account.name | display }}
           </a>
 
           <span class="float-end">
@@ -61,7 +61,7 @@
 
         {% if account.children %}
           <div class="list-group-item list-group collapse gnc-account-group"
-               id="{{ account.fullname | replace(':', '-') }}">
+               id="{{ account.fullname }}">
                {{ loop(account.children) }}
           </div>
         {% endif %}
@@ -108,7 +108,7 @@
               | selectattr('commodity', 'eq', account.commodity)
               | rejectattr('placeholder')
               | sort(attribute='fullname') %}
-              <option value={{ contra_account.fullname }}>{{ contra_account.fullname }}</option>
+              <option value={{ contra_account.fullname }}>{{ contra_account.fullname | display }}</option>
             {% endfor %}
           </select>
         </div>

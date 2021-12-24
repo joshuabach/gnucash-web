@@ -1,6 +1,6 @@
 {# First row: description and amount #}
 <div class="row align-items-center justify-content-between">
-  <div class="col-9 fw-bolder">{{ split.transaction.description|e }}</div>
+  <div class="col-9 fw-bolder">{{ split.transaction.description }}</div>
   <div class="col-3 text-end">
     <span class="float-end fs-7">
       {{ split.value | money(split.transaction.currency) }}
@@ -13,7 +13,7 @@
   <div class="col-3">
     {{ split.transaction.post_date -}}
     {%- if split.transaction.num -%}
-      #{{ split.transaction.num}}
+      #{{ split.transaction.num }}
     {% endif %}
   </div>
 
@@ -26,7 +26,7 @@
       <a href="{{ url_for('show_account') }}{{ account | replace(':', '/') }}">
         {# Display account name, line-breakable /only/ at the colons #}
         <span class="no-text-break">
-          {{- account | replace(':', '</span>:<span class="no-text-break">') -}}
+          {{- account | replace(':', '</span>:<span class="no-text-break">'|safe) -}}
         </span>
       </a>{% if not loop.last %}, {% endif %}
     {% endfor %}
