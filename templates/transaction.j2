@@ -1,0 +1,34 @@
+{# First row: description and amount #}
+<div class="row align-items-center justify-content-between">
+  <div class="col-9 fw-bolder">{{ split.transaction.description|e }}</div>
+  <div class="col-3 text-end">
+    <span class="float-end fs-7">
+      {{ split.value | money(split.transaction.currency) }}
+    </span>
+  </div>
+</div>
+
+{# Second row: date and contra accounts #}
+<div class="row align-items-center justify-content-between">
+  <div class="col-3">
+    {{ split.transaction.post_date -}}
+    {%- if split.transaction.num -%}
+      #{{ split.transaction.num}}
+    {% endif %}
+  </div>
+
+  <div class="col-9 text-end text-break">
+    {# We do not really support split transactions: Simply display all contra accounts #}
+    {% for account in split.transaction.splits
+      | map(attribute='account')
+      | map(attribute='fullname')
+      | reject('eq', split.account.fullname) %}
+      <a href="{{ url_for('show_account') }}{{ account | replace(':', '/') }}">
+        {# Display account name, line-breakable /only/ at the colons #}
+        <span class="no-text-break">
+          {{- account | replace(':', '</span>:<span class="no-text-break">') -}}
+        </span>
+      </a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </div>
+</div>

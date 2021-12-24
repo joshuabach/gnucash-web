@@ -1,11 +1,11 @@
-.gnc-placeholder[data-bs-toggle].collapsed:before {
+.gnc-superaccount[data-bs-toggle].collapsed:before {
     font-weight: 900;
     content: "^";
     color:  #444444;
     position: relative;
     left: -4px;
 }
-.gnc-placeholder[data-bs-toggle]:not(.collapsed):before {
+.gnc-superaccount[data-bs-toggle]:not(.collapsed):before {
     font-weight: 900;
     content: "v";
     color:  #444444;
@@ -24,8 +24,8 @@
     border-top-width: 0px;
 }
 
-.gnc-account-group + .gnc-placeholder,
-.gnc-account-group + .gnc-account {
+.gnc-account-group + .gnc-superaccount,
+.gnc-account-group + .gnc-leafaccount {
     border-top-width: 1px;
 }
 

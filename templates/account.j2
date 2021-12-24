@@ -2,6 +2,7 @@
 
 {% block title %}{{ account.fullname or 'Accounts' }}{% endblock title %}
 
+{# Account layer navigator in navbar header #}
 {% block account_header %}
   <nav class="gnc-account-nav">
     <ol class="breadcrumb mt-3">
@@ -13,7 +14,7 @@
         {%- elif not loop.first -%}
           <li class="breadcrumb-item">
             <a class="link"
-               href="{{ url_for('show_account', account_name=parent_account.fullname.replace(':', '/')) }}">
+               href="{{ parent_account | accounturl }}">
                {{ parent_account.name }}
             </a>
           </li>
@@ -26,41 +27,37 @@
 {% block content %}
   <div id="total" class="my-2 list-group">
     {% if account.parent %}
-      {% set balance = account.get_balance() %}
       <div class="list-group-item">
         <b>Total</b>
-        <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
-          {{ balance }} {{ account.commodity.mnemonic }}
+        <span class="float-end">
+          {{ account.get_balance() | money(account.commodity) }}
         </span>
       </div>
     {% endif %}
   </div>
-  
+
   {% if account.children %}
     <div id="subaccounts" class="my-2 list-group">
+      {# Display all subaccounts in a collapsed tree view #}
       {% for account in account.children | sort(attribute='name') recursive %}
-        {% set balance = account.get_balance() %}
-        {% if account.placeholder %}
-          <div class="list-group-item list-group-item-action collapsed gnc-placeholder"
+
+        {# Accounts with children are collapsed list group items toggling visibility of the subtree  #}
+        <div class="list-group-item list-group-item-action
+                    {% if account.children %}collapsed gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
+             {% if account.children %}
                role="button"
-               data-bs-toggle="collapse" href="#{{ account.fullname | replace(':', '-') }}">
-               <a class="link-secondary" href="{{ url_for('show_account') }}{{ account.fullname | replace(':', '/') }}">
-                 {{ account.name }}
-               </a>
-               <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
-                 {{ balance }} {{ account.commodity.mnemonic }}
-               </span>
-          </div>
-        {% else %}
-          <div class="list-group-item list-group-item-action gnc-account">
-            <a href="{{ url_for('show_account') }}{{ account.fullname | replace(':', '/') }}">
-              {{ account.name }}
-            </a>
-            <span class="float-end badge bg-{% if balance >= 0 %}secondary{% else %}danger{% endif %}">
-              {{ balance }} {{ account.commodity.mnemonic }}
-            </span>
-          </div>
-        {% endif %}
+               data-bs-toggle="collapse"
+               href="#{{ account.fullname | replace(':', '-') }}"
+             {% endif %}>
+
+          <a {% if account.placeholder %}class="link-secondary"{% endif %} href="{{ account | accounturl }}">
+            {{ account.name }}
+          </a>
+
+          <span class="float-end">
+            {{ account.get_balance() | money(account.commodity) }}
+          </span>
+        </div>
 
         {% if account.children %}
           <div class="list-group-item list-group collapse gnc-account-group"
@@ -73,16 +70,21 @@
   {% endif %}
 
   {% if not account.placeholder and account.parent %}
+    {# Transaction form takes same layout as transaction view #}
     <div id="transaction_form" class="my-2">
       <form id="add_transaction" action="{{ url_for('add_transaction') }}" method="post">
         <input class="form-control form-control-sm" type="hidden" name="account_name" value={{ account.fullname }}>
       </form>
+
       <div class="row align-items-center justify-content-between gap-0">
+        {# Transaction description #}
         <div class="col-9 pe-0">
           <input class="form-control form-control-sm" form="add_transaction"
                  placeholder="Description" name="description" type="text" id="description"
                  required>
         </div>
+
+        {# Amount to be transfered #}
         <div class="col-3 ps-0">
           <input class="form-control form-control-sm" form="add_transaction"
                  placeholder="Value" name="value" type="number"
@@ -91,17 +93,20 @@
       </div>
 
       <div class="row align-items-center justify-content-between">
+        {# Date of the transaction (default today #}
         <div class="col-4 pe-0">
           <input class="form-control form-control-sm" form="add_transaction"
                  name="date" type="date" value="{{ today.isoformat() }}"
                  required>
         </div>
+
+        {# Selectable contra accounts are all other account of the same commodity, which are not placeholders #}
         <div class="col-8 ps-0">
           <select class="form-select form-select-sm" form="add_transaction" name="contra_account_name">
             {% for contra_account in book.accounts
               | rejectattr('fullname', 'eq', account.fullname)
-              | rejectattr('placeholder')
               | selectattr('commodity', 'eq', account.commodity)
+              | rejectattr('placeholder')
               | sort(attribute='fullname') %}
               <option value={{ contra_account.fullname }}>{{ contra_account.fullname }}</option>
             {% endfor %}
@@ -109,44 +114,18 @@
         </div>
       </div>
 
+      {# Submit button #}
       <div class="row">
         <div class="d-grid">
           <button class="btn btn-primary btn-sm" form="add_transaction" type="submit">Add Transaction</button>
         </div>
       </div>
     </div>
-    
+
     <div id="transactions" class="my-2">
       {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num', reverse=True) %}
         <div class="{% if loop.index % 2 %}bg-light{% endif %} border-top {% if loop.last %}border-bottom{% endif %}">
-          <div class="row align-items-center justify-content-between">
-            <div class="col-9 fw-bolder">{{ split.transaction.description }}</div>
-            <div class="col-3 text-end">
-              <span class="float-end fs-7 text-{% if split.value >= 0 %}secondary{% else %}danger{% endif %}">
-                {{ split.value }} {{ split.transaction.currency.mnemonic }}
-              </span>
-            </div>
-          </div>
-          <div class="row align-items-center justify-content-between">
-            <div class="col-3">
-              {{ split.transaction.post_date -}}
-              {%- if split.transaction.num -%}
-                #{{ split.transaction.num}}
-              {% endif %}
-            </div>
-            <div class="col-9 text-end text-break">
-              {# List all contra accounts #}
-              {% for account in split.transaction.splits
-                | map(attribute='account') | map(attribute='fullname')
-                | reject('eq', split.account.fullname) %}
-                <a href="{{ url_for('show_account') }}{{ account | replace(':', '/') }}">
-                  <span class="no-text-break">
-                    {{ account | replace(':', '</span>:<span class="no-text-break">') }}
-                  </span>
-                </a>{% if not loop.last %}, {% endif %}
-              {% endfor %}
-            </div>
-          </div>
+          {% include 'transaction.j2' %}
         </div>
       {% endfor %}
     </div>
