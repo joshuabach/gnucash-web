@@ -12,35 +12,42 @@
     {% block head %}{% endblock %}
   </head>
   <body>
-    <div class="container">
-      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-sm-between
-                     py-3 mb-4 border-bottom">
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="container-fluid">
         <a href="{{ url_for('show_account') }}"
-           class="d-flex align-items-center col-sm-3 mb-2 mb-sm-0 text-dark">
-           <img class="bi me-2" width="32" height="32" role="img"
-                src="/static/img/official/32x32/apps/gnucash-icon.png">
-           GnuCash Web
+           class="navbar-brand">
+           <img  width="32" height="32" role="img"
+                 src="/static/img/official/32x32/apps/gnucash-icon.png">
+                 <span class="text-dark">GnuCash Web</span>
         </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-content">
+                <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <div class="nav col-12 col-sm-auto mb-2 justify-content-center mb-sm-0">
-          {% block account_header %}
-            <a href="{{ url_for('show_account') }}" class="nav-link px-2">All Accounts</a>
-          {% endblock account_header %}
-        </div>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              {% block account_header %}
+                <a class="nav-link" href="{{ url_for('show_account') }}">Accounts</a>
+              {% endblock %}
+            </li>
+          </ul>
 
-        <div class="col-sm-3 text-end">
           {% if is_authenticated() %}
-            <form action="{{ url_for('logout') }}" method="POST">
-              <input type="submit" class="btn btn-outline-primary me-2" value="Logout">
+            <form class="d-flex" action="{{ url_for('logout') }}" method="POST">
+              <input type="submit" class="form-control btn btn-outline-primary me-2" value="Logout">
             </form>
           {% elif request.path != url_for('login') %}
-            <a href="{{ url_for('login') }}">
+            <a class="d-flex" href="{{ url_for('login') }}">
               <button type="button" class="btn btn-outline-primary me-2">Login</button>
             </a>
           {% endif %}
         </div>
-      </header>
-    </div>
+      </div>
+    </nav>
 
     <main>
       <div id="content" class="container">
@@ -49,6 +56,7 @@
     </main>
 
     <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/gnucash-web.js"></script>
 
     <address>
       <a href="mailto:joshua@galp.bachmeier.cc"></a>

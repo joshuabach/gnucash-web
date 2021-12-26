@@ -4,24 +4,21 @@
 
 {# Account layer navigator in navbar header #}
 {% block account_header %}
-  <nav class="gnc-account-nav">
-    <ol class="breadcrumb mt-3">
-      {% for parent_account in account | parentaccounts -%}
-        {% if loop.first and loop.last -%}
-          <li class="breadcrumb-item active">All Accounts</li>
-        {%- elif loop.last -%}
-          <li class="breadcrumb-item active">{{ parent_account.name | display }}</li>
-        {%- elif not loop.first -%}
-          <li class="breadcrumb-item">
-            <a class="link"
-               href="{{ parent_account | accounturl }}">
-               {{ parent_account.name | display }}
-            </a>
-          </li>
-        {%- endif -%}
-      {%- endfor %}
-    </ol>
-  </nav>
+  <div class="breadcrumb gnc-account-nav py-2 my-0 mx-4">
+    {% for parent_account in account | parentaccounts -%}
+      {% if loop.first and loop.last -%}
+        <div class="breadcrumb-item active">All Accounts</div>
+      {%- elif loop.last -%}
+        <div class="breadcrumb-item active">{{ parent_account.name | display }}</div>
+      {%- elif not loop.first -%}
+        <a class="breadcrumb-item link d-inline-block text-truncate"
+           style="max-width: 500px"
+           href="{{ parent_account | accounturl }}">
+          {{ parent_account.name | display }}
+        </a>
+      {%- endif -%}
+    {%- endfor %}
+  </div>
 {% endblock account_header %}
 
 {% block content %}
@@ -42,8 +39,9 @@
       {% for account in account.children | sort(attribute='name') recursive %}
 
         {# Accounts with children are collapsed list group items toggling visibility of the subtree  #}
-        <div class="list-group-item list-group-item-action
+        <div class="list-group-item list-group-item-action text-break
                     {% if account.children %}collapsed gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
+             style="overflow: hidden"
              {% if account.children %}
                role="button"
                data-bs-toggle="collapse"
