@@ -11,7 +11,8 @@
     <title>{% block title %}{% endblock %} — GnuCash Web</title>
     {% block head %}{% endblock %}
   </head>
-  <body>
+
+  <body class="d-flex flex-column min-vh-100">
     <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container-fluid">
         <a href="{{ url_for('show_account') }}"
@@ -49,18 +50,21 @@
       </div>
     </nav>
 
-    <main>
-      <div id="content" class="container">
-        {% block content required %}{% endblock %}
-      </div>
+    <main id="content" class="container">
+      {% block content required %}{% endblock %}
     </main>
+
+    <footer class="footer mt-auto bg-light py-2 px-4 mt-7">
+      <div class="float-start">
+        <span class="text-muted">GnuCash Web v0.0.0 © Joshua Bachmeier (2021), GPLv3</span>
+      </div>
+      <div class="float-end">
+        <a href="https://github.com/joshuabach/gnucash-web">GitHub</a>
+      </div>
+    </footer>
 
     <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/static/gnucash-web.js"></script>
-
-    <address>
-      <a href="mailto:joshua@galp.bachmeier.cc"></a>
-    </address>
   </body>
 </html>
 
