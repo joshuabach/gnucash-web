@@ -5,4 +5,4 @@ from main import app
 from utils import jinja
 
 # Load components
-import auth, gnucash_web
+import auth, gnucash_web, errors

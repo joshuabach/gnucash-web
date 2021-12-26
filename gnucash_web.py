@@ -3,10 +3,13 @@ from decimal import Decimal, InvalidOperation
 from urllib.parse import unquote_plus
 
 from flask import render_template, url_for, request, redirect, session
-from piecash import open_book, Transaction, Split, GnucashException
+from piecash import Transaction, Split, GnucashException
+from werkzeug.exceptions import BadRequest
 
 from main import app, config, logger
 from auth import requires_auth, get_db_credentials
+from errors import AccountNotFound
+from utils.gnucash import open_book, get_account
 
 @app.route('/accounts/<path:account_name>')
 @app.route('/accounts/', defaults={'account_name': ''})
@@ -16,7 +19,7 @@ def show_account(account_name):
     account_name = ':'.join(unquote_plus(name) for name in account_name.split('/'))
 
     with open_book(uri_conn=config.DB_URI(*get_db_credentials())) as book:
-        account = book.accounts.get(fullname=account_name) if account_name else book.root_account
+        account = get_account(book, fullname=account_name) if account_name else book.root_account
 
         return render_template(
             'account.j2',
@@ -28,21 +31,37 @@ def show_account(account_name):
 @app.route('/transaction', methods=['POST'])
 @requires_auth
 def add_transaction():
-    account_name = request.form['account_name']
-    transaction_date = date.fromisoformat(request.form['date'])
-    description = request.form['description']
-    value = Decimal(request.form['value'])
-    contra_account_name = request.form['contra_account_name']
+    try:
+        account_name = request.form['account_name']
+        transaction_date = date.fromisoformat(request.form['date'])
+        description = request.form['description']
+        value = Decimal(request.form['value'])
+        contra_account_name = request.form['contra_account_name']
+    except (InvalidOperation, ValueError) as e:
+        # TODO: Say which parameter the error is about
+        raise BadRequest(f'Invalid form parameter: {e}') from e
 
     with open_book(uri_conn=config.DB_URI(*get_db_credentials()), readonly=False, do_backup=False) as book:
-        account = book.accounts.get(fullname=account_name)
-        contra_account = book.accounts.get(fullname=contra_account_name)
+        account = get_account(book, fullname=account_name)
+        contra_account = get_account(book, fullname=contra_account_name)
+
+        if account.placeholder:
+            raise BadRequest(f'{account.fullname} is a placeholder')
+
+        if contra_account.placeholder:
+            raise BadRequest(f'{contra_account.fullname} is a placeholder')
 
         # TODO: Support accounts with different currencies
         assert account.commodity == contra_account.commodity, \
-            f'{account.commodity} != {contra_account.commodity}'
+            f'Incompatible accounts: {account.commodity} != {contra_account.commodity}.' \
+            'Transaction form in account.j2 should not have allowed this.'
+
         common_currency = account.commodity
 
+        # This can not fail, since currency is a valid commodity, description can be any
+        # string, post_date is a valid datetime.date, account and contra_account are valid
+        # non-placeholder accounts and value is a Decimal. Any other error should be
+        # considered a bug.
         transaction = Transaction(
             currency=common_currency,
             description=description,
