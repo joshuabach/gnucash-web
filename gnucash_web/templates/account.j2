@@ -70,7 +70,7 @@
   {% if not account.placeholder and account.parent %}
     {# Transaction form takes same layout as transaction view #}
     <div id="transaction_form" class="my-2">
-      <form id="add_transaction" action="{{ url_for('add_transaction') }}" method="post">
+      <form id="add_transaction" action="{{ url_for('book.add_transaction') }}" method="post">
         <input class="form-control form-control-sm" type="hidden" name="account_name" value={{ account.fullname }}>
       </form>
 

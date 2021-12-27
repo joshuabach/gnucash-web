@@ -42,6 +42,7 @@ Development
 -----------
 ```sh
     pip install -r requirements.txt
+    export FLASK_APP=gnucash_web
     export FLASK_ENV=development
     flask run
 ```

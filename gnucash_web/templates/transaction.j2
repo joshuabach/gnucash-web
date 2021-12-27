@@ -23,7 +23,7 @@
       | map(attribute='account')
       | map(attribute='fullname')
       | reject('eq', split.account.fullname) %}
-      <a href="{{ url_for('show_account') }}{{ account | replace(':', '/') }}">
+      <a href="{{ url_for('book.show_account') }}{{ account | replace(':', '/') }}">
         {# Display account name, line-breakable /only/ at the colons #}
         <span class="no-text-break">
           {{- account | replace(':', '</span>:<span class="no-text-break">'|safe) -}}

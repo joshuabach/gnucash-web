@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="/static/img/official/16x16/apps/gnucash-icon.png" rel="icon" type="image/png">
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/gnucash-web.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='img/official/16x16/apps/gnucash-icon.png') }}" rel="icon" type="image/png">
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='gnucash-web.css') }}" rel="stylesheet">
 
     <title>{% block title %}{% endblock %} — GnuCash Web</title>
     {% block head %}{% endblock %}
@@ -15,10 +15,10 @@
   <body class="d-flex flex-column min-vh-100">
     <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container-fluid">
-        <a href="{{ url_for('show_account') }}"
+        <a href="{{ url_for('index') }}"
            class="navbar-brand">
            <img  width="32" height="32" role="img"
-                 src="/static/img/official/32x32/apps/gnucash-icon.png">
+                 src="{{ url_for('static', filename='img/official/32x32/apps/gnucash-icon.png') }}">
                  <span class="text-dark">GnuCash Web</span>
         </a>
         <button class="navbar-toggler"
@@ -32,17 +32,17 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
               {% block account_header %}
-                <a class="nav-link" href="{{ url_for('show_account') }}">Accounts</a>
+                <a class="nav-link" href="{{ url_for('book.show_account') }}">Accounts</a>
               {% endblock %}
             </li>
           </ul>
 
           {% if is_authenticated() %}
-            <form class="d-flex" action="{{ url_for('logout') }}" method="POST">
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
               <input type="submit" class="form-control btn btn-outline-primary me-2" value="Logout">
             </form>
-          {% elif request.path != url_for('login') %}
-            <a class="d-flex" href="{{ url_for('login') }}">
+          {% elif request.path != url_for('auth.login') %}
+            <a class="d-flex" href="{{ url_for('auth.login') }}">
               <button type="button" class="btn btn-outline-primary me-2">Login</button>
             </a>
           {% endif %}
@@ -63,8 +63,8 @@
       </div>
     </footer>
 
-    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/gnucash-web.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='gnucash-web.js') }}"></script>
   </body>
 </html>
 

@@ -1,24 +1,40 @@
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from urllib.parse import unquote_plus
+from itertools import accumulate
 
-from flask import render_template, url_for, request, redirect, session
+from flask import render_template, url_for, request, redirect, session, Blueprint
+from flask import current_app as app
 from piecash import Transaction, Split, GnucashException
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
+from markupsafe import escape
 
-from main import app, config, logger
-from auth import requires_auth, get_db_credentials
-from errors import AccountNotFound
-from utils.gnucash import open_book, get_account
+from .auth import requires_auth, get_db_credentials
+from .utils.gnucash import open_book, get_account
 
-@app.route('/accounts/<path:account_name>')
-@app.route('/accounts/', defaults={'account_name': ''})
+
+bp = Blueprint('book', __name__, url_prefix='/book')
+
+
+class AccountNotFound(NotFound):
+    def __init__(self, account_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.account_name = account_name
+
+@bp.app_errorhandler(AccountNotFound)
+def handle_account_not_found(e: AccountNotFound):
+    body = render_template('error_account_not_found.j2', account_name=e.account_name)
+    return body, e.code
+
+
+@bp.route('/accounts/<path:account_name>')
+@bp.route('/accounts/', defaults={'account_name': ''})
 @requires_auth
 def show_account(account_name):
     # Pendant to `account_url`
     account_name = ':'.join(unquote_plus(name) for name in account_name.split('/'))
 
-    with open_book(uri_conn=config.DB_URI(*get_db_credentials())) as book:
+    with open_book(uri_conn=app.config.DB_URI(*get_db_credentials())) as book:
         account = get_account(book, fullname=account_name) if account_name else book.root_account
 
         return render_template(
@@ -28,7 +44,7 @@ def show_account(account_name):
             today=date.today(),
         )
 
-@app.route('/transaction', methods=['POST'])
+@bp.route('/transaction', methods=['POST'])
 @requires_auth
 def add_transaction():
     try:
@@ -41,7 +57,7 @@ def add_transaction():
         # TODO: Say which parameter the error is about
         raise BadRequest(f'Invalid form parameter: {e}') from e
 
-    with open_book(uri_conn=config.DB_URI(*get_db_credentials()), readonly=False, do_backup=False) as book:
+    with open_book(uri_conn=app.config.DB_URI(*get_db_credentials()), readonly=False, do_backup=False) as book:
         account = get_account(book, fullname=account_name)
         contra_account = get_account(book, fullname=contra_account_name)
 
@@ -75,6 +91,6 @@ def add_transaction():
         book.save()
 
     return redirect(url_for(
-        'show_account',
+        'book.show_account',
         account_name=account_name.replace(':', '/')
     ))
