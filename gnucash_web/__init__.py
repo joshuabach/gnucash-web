@@ -3,6 +3,8 @@ import sys
 import pathlib
 
 from flask import Flask, redirect, url_for
+from flask.cli import FlaskGroup
+import click
 
 from . import auth, book
 from .utils import jinja as jinja_utils
@@ -54,3 +56,8 @@ def create_app(test_config=None):
         return redirect(url_for('book.show_account'))
 
     return app
+
+
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """GnuCash Web - A simple, easy to use, mobile-friendly webinterface intended for self-hosting"""
