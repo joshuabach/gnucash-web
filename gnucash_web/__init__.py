@@ -1,6 +1,7 @@
 import os
 import sys
 import pathlib
+from importlib import metadata
 
 from flask import Flask, redirect, url_for
 from flask.cli import FlaskGroup
@@ -10,8 +11,6 @@ from . import auth, book
 from .utils import jinja as jinja_utils
 from .config import GnuCashWebConfig
 
-# Add '../EncryptedSession' to import path
-sys.path.append(str(pathlib.Path(__file__).parent.parent / 'EncryptedSession'))
 from encrypted_session import EncryptedSessionInterface
 
 
@@ -47,6 +46,8 @@ def create_app(test_config=None):
     app.jinja_env.filters['accounturl'] = jinja_utils.account_url
     app.jinja_env.filters['full_account_names'] = jinja_utils.full_account_names
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
+
+    app.jinja_env.globals['pkg_version'] = metadata.version('gnucash_web')
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(book.bp)
