@@ -1,5 +1,5 @@
-[WIP] GnuCash Web
-=================
+GnuCash Web
+===========
 
 *GnuCash Web* is a simple, easy to use, mobile-friendly webinterface for
 [GnuCash](https://gnucash.org/) intended for self-hosting. It can access a single
@@ -7,6 +7,9 @@ GnuCash-Database in [sqlite3](https://sqlite.org/index.html),
 [postgres](https://www.postgresql.org/) or [mysql](https://www.mysql.com/de/) (including
 [mariadb](https://mariadb.org/)) format using the great
 [piecash](https://pypi.org/project/piecash/) GnuCash library for Python.
+
+Development status should be considered at most *Alpha*, see [below](#Contributing) for
+more information.
 
 Features
 --------
@@ -27,30 +30,124 @@ Core Technology Stack
 
 - [Python](https://www.python.org/)
 - [piecash](https://pypi.org/project/piecash/) for accessing GnuCash database
-- [flask](https://palletsprojects.com/p/flask/) web framework
+- [Flask](https://palletsprojects.com/p/flask/) web framework
 - [Bootstrap](https://getbootstrap.com/) for frontend design
 
 Installation
 ------------
-TBD
 
-Configuration & Usage
----------------------
-TBD
+*GnuCash Web* is available on PyPi, so you can simply install it via `pip install
+gnucash_web`. Additionally, you will need to install `mysql` or `psycopg2`, depending on
+which backend you want to use.
+
+Note that at least Python 3.8 is required.
+
+Usage
+-----
+
+*GnuCash Web* is aimed at system administrators, but is otherwise easy to set up.
+
+### Configuration
+
+Create a config file in `/etc/gnucash_web/config.py` or in
+`~/.config/gnucash_web/config.py`.  If both files are present, values from the latter
+override those from the former.  Set the environment variable `GNUCASH_WEB_CONFIG` to load
+a different config file. If set, no other config files are read.
+
+The config file is a python script. The following example illustrates possible values for
+all available options. This is the normal Flask configuration file, so all [standard
+configuration
+variables](https://flask.palletsprojects.com/en/2.0.x/config/#builtin-configuration-values)
+can also be set.
+
+```python
+import logging
+
+# A 32-bit-key used e.g. to encrypt the session cookie or for other cryptographic operations
+SECRET_KEY = 'devel'
+
+# Python standard library log level
+LOG_LEVEL = logging.WARN
+
+# Supported values: 'sqlite', 'mysql' or 'postgres'
+DB_DRIVER = mysql
+
+# Hostname of the database (ignored for DB_DRIVER = 'sqlite')
+DB_HOST = database.example.org
+
+# Name of the Database on the host (for DB_DRIVER = 'sqlite', this is the 'path/to/db.sqlite')
+DB_NAME = 'gnucash_data'
+
+# Supported values: None, 'passthrough'. See below for details.
+AUTH_MECHANISM = None
+```
+
+### Running
+
+It is not recommended to use the builtin Flask webserver in production. *GnuCash Web*
+comes as a [WSGI](https://wsgi.readthedocs.io/en/latest/) application, so there are [many
+options](https://flask.palletsprojects.com/en/2.0.x/deploying/) available to run it.
+
+Most WSGI Webserver require setting a "module", which is the WSGI object that runs the
+app. For *GnuCash Web*, this is `gnucash_web.wsgi:app`.
+
+For example, the following `.ini`-file might be used as a config for
+[uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/):
+
+```ini
+[uwsgi]
+module = gnucash_web.wsgi:app
+pidfile = gnucash_web.pid
+master = true
+processes = 1
+http-socket = :8080
+chmod-socket = 660
+vacuum = true
+```
+
+### Authentication
+
+Currently, there are only two authentication mechanisms supported, `None` and `'passthrough'`.
+
+When using no authentication, anyone can access the web interface and no credentials are
+provided to the database host. This is generally only usefull when using the sqlite
+backend (which does not accept credentials).
+
+When using passthrough auth, *GnuCash Web* asks for username and password upon login,
+which are provided as credentails for the database hosts. They are also stored in an
+encrypted session cookie in the users browser. "Logging out" simply deletes the session
+cookie.
+
+
 
 Development
 -----------
+
+Initialise submodules and install dependencies:
 ```sh
+    git submodule init
+    git submodule update
     pip install -r requirements.txt
+
+```
+
+Run it:
+```sh
     export FLASK_APP=gnucash_web
     export FLASK_ENV=development
     flask run
 ```
 
+Build and upload package:
+```sh
+    python -m build
+    python -m twine upload dist/*
+```
+
 Contributing
 ------------
 
-**Contributions are not yet welcome, until the initial release.**
+**Development is at an early stage, but contributions are welcome.**
 
 This is (currently) a personal project to play around with and satisfy my own everyday
 needs and intellectual curiosity.
