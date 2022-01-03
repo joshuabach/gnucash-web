@@ -40,9 +40,10 @@ Core Technology Stack
 Installation
 ------------
 
-*GnuCash Web* is available on PyPi, so you can simply install it via `pip install
-gnucash_web`. Additionally, you will need to install `mysql` or `psycopg2`, depending on
-which backend you want to use.
+*GnuCash Web* is [available on PyPI](https://pypi.org/project/GnuCash-Web/), so you can
+simply install it via `pip install gnucash_web`. Additionally, you may need to install
+`mysql` or `psycopg2`, depending on which backend you want to use (sqlite backend ist
+included in the python standard library).
 
 Note that at least Python 3.8 is required.
 
