@@ -25,6 +25,10 @@ Key features include:
 - Simple single-user authentication
 - Ease of use, especially on mobile
 
+| Browse account hierarchy                                                  | View and add transactions                                            |
+|---------------------------------------------------------------------------|----------------------------------------------------------------------|
+| ![Browse account hierarchy](/screenshots/book.accounts.list.png?raw=true) | ![View transactions](/screenshots/book.accounts.ledger.png?raw=true) |
+
 Core Technology Stack
 ---------------------
 
