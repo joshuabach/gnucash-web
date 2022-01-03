@@ -71,7 +71,7 @@
     {# Transaction form takes same layout as transaction view #}
     <div id="transaction_form" class="my-2">
       <form id="add_transaction" action="{{ url_for('book.add_transaction') }}" method="post">
-        <input class="form-control form-control-sm" type="hidden" name="account_name" value={{ account.fullname }}>
+        <input class="form-control form-control-sm" type="hidden" name="account_name" value="{{ account.fullname }}">
       </form>
 
       <div class="row align-items-center justify-content-between gap-0">

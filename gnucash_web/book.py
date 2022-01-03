@@ -11,6 +11,7 @@ from markupsafe import escape
 
 from .auth import requires_auth, get_db_credentials
 from .utils.gnucash import open_book, get_account
+from .utils.jinja import account_url
 
 
 bp = Blueprint('book', __name__, url_prefix='/book')
@@ -90,7 +91,4 @@ def add_transaction():
 
         book.save()
 
-    return redirect(url_for(
-        'book.show_account',
-        account_name=account_name.replace(':', '/')
-    ))
+        return redirect(account_url(account))
