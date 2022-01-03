@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock title %}
 {% block content %}
   {% if is_authenticated %}
-    Logged in as {{ username }}.
+    Logged in as <strong>{{ username }}</strong>.
   {% else %}
     Not logged in.
   {% endif %}
