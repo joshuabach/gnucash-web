@@ -2,6 +2,9 @@ from contextlib import contextmanager
 
 from werkzeug.exceptions import Locked
 import piecash
+import sqlalchemy
+
+from ..auth import AccessDenied
 
 @contextmanager
 def open_book(*args, **kwargs):
@@ -11,6 +14,11 @@ def open_book(*args, **kwargs):
     except piecash.GnucashException as e:
         if 'Lock on the file' in str(e):
             raise Locked('GnuCash Database is locked')
+        else:
+            raise e
+    except sqlalchemy.exc.OperationalError as e:
+        if 'Access denied' in str(e):
+            raise AccessDenied from e
         else:
             raise e
 

@@ -8,6 +8,15 @@ from flask import current_app as app
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+class AccessDenied(Exception):
+    pass
+
+@bp.app_errorhandler(AccessDenied)
+def handle_account_not_found(e: AccessDenied):
+    end_session()
+    return redirect(url_for('auth.login'))
+
+
 def get_db_credentials():
     if not app.config.AUTH_MECHANISM:
         return (None, None)
@@ -26,7 +35,7 @@ def authenticate(username, password):
                 session['username'] = username
                 session['password'] = password
                 return True
-        except OperationalError:
+        except AccessDenied:
             app.logger.debug(f'Authentication failed for {username}')
             return False
     else:
