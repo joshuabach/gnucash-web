@@ -26,4 +26,6 @@ def get_account(book, *args, **kwargs):
     try:
         return book.accounts.get(*args, **kwargs)
     except KeyError:
-        raise AccountNotFound(account_name)
+        # Import here, because of circular import
+        from ..book import AccountNotFound
+        raise AccountNotFound(*args, **kwargs)

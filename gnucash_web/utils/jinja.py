@@ -1,6 +1,6 @@
 import re
 from urllib.parse import quote_plus
-from itertools import islice
+from itertools import islice, accumulate
 
 from flask import url_for
 from babel import numbers

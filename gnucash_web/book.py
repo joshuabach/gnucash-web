@@ -17,9 +17,9 @@ bp = Blueprint('book', __name__, url_prefix='/book')
 
 
 class AccountNotFound(NotFound):
-    def __init__(self, account_name, *args, **kwargs):
+    def __init__(self, fullname, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.account_name = account_name
+        self.account_name = fullname
 
 @bp.app_errorhandler(AccountNotFound)
 def handle_account_not_found(e: AccountNotFound):
