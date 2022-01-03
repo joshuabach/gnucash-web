@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='GnuCash Web',
-    version='0.0.0',
+    version='0.0.1',
     author='Joshua Bachmeier',
     author_email='joshua@bachmeier.cc',
     description='A simple, easy to use, mobile-friendly webinterface for GnuCash intended for self-hosting',
@@ -16,7 +16,7 @@ setup(
     },
     license='GPLv3+',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Financial and Insurance Industry',
@@ -25,6 +25,7 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application'
     ],
     keywords=['bootstrap', 'flask', 'web', 'gnucash'],
@@ -39,6 +40,9 @@ setup(
             'static/img/official/*/apps/*',
         ],
     },
+
+    # Because of datetime.date.fromisoformat (3.7) and importlib.metadata (3.8)
+    python_requires=">=3.8",
 
     install_requires=[
         'Flask>=2.0.2',
