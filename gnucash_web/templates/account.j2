@@ -86,6 +86,7 @@
         <div class="col-3 ps-0">
           <input class="form-control form-control-sm" form="add_transaction"
                  placeholder="Value" name="value" type="number"
+                 step="{{ 1 / account.commodity.fraction }}"
                  required>
         </div>
       </div>
