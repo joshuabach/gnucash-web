@@ -61,7 +61,7 @@ def requires_auth(func):
         if is_authenticated():
             return func(*args, **kwargs)
         else:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', return_url=request.url))
 
     return inner
 
@@ -70,11 +70,12 @@ def requires_auth(func):
 def login():
     if request.method == 'POST':
        authenticate(request.form['username'], request.form['password'])
-
-    if is_authenticated():
-        return render_template('user.j2', username=session.get('username', 'no one'))
+       return redirect(request.args.get('return_url') or url_for('.login'))
     else:
-        return render_template('login.j2')
+        if is_authenticated():
+            return render_template('user.j2', username=session.get('username', 'no one'))
+        else:
+            return render_template('login.j2')
 
 @bp.route('/logout', methods=['POST'])
 def logout():
