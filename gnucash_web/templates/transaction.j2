@@ -22,12 +22,11 @@
     {% for account in split.transaction.splits
       | map(attribute='account')
       | rejectattr('fullname', 'eq', split.account.fullname) %}
-      <a href="{{ account | accounturl }}">
-        {# Display account name, line-breakable /only/ at the colons #}
-        <span class="no-text-break">
+      {# Display account name, line-breakable /only/ at the colons #}
+      <a href="{{ account | accounturl }}"><span class="no-text-break">
           {{- account.fullname | display | replace(':', '</span>:<span class="no-text-break">' | safe) -}}
-        </span>
-      </a>{% if not loop.last %}, {% endif %}
+      </span></a>
+      {%- if not loop.last %}, {% endif %}
     {% endfor %}
   </div>
 </div>
