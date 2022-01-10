@@ -1,0 +1,59 @@
+{% extends 'base.j2' %}
+{% block title %}Database is Locked{% endblock title %}
+{% block head %}
+  <noscript>
+    <style>
+      .display-scriptonly {
+        display: none !important
+      }
+    </style>
+  </noscript>
+{% endblock head %}
+{% block content %}
+  <div class="row">
+    <div class="col text-center text-warning fs-1">
+      ⚠
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center fs-3">
+      Someone else seems to be using the database.
+      Proceeding might cause <em>data loss or corruption</em>.
+      Use at your own risk.
+    </div>
+  </div>
+  <div class="row justify-content-center mt-3">
+    <div class="col-auto">
+      {# Prefer to go back using browser history (e.g. to retain entered form data) #}
+      <button class="display-scriptonly btn btn-success"
+              onclick="history.go(-1)">
+        Go back to safety
+      </button>
+      {# When Javascript is disabled, add a href to the referrer #}
+      <noscript>
+        <a class="btn btn-success"
+           href="{{ request.referrer }}">
+          Go back to safety
+        </a>
+      </noscript>
+    </div>
+    <div class="col-auto">
+      {%- if request.method == "POST" -%}
+        {# Replicate form #}
+        <form method="{{ request.method }}" action="{{ ignore_lock_url }}">
+          {% for key in request.form %}
+            <input type="hidden" name="{{ key }}" value="{{ request.form[key] }}">
+          {% endfor %}
+          <button class="btn btn-danger">
+            Ignore and proceed
+          </button>
+        </form>
+      {% else %}
+        <a class="btn btn-danger"
+           href="{{ ignore_lock_url}}">
+           Ignore and proceed
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

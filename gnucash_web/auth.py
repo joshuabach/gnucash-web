@@ -1,15 +1,12 @@
 from functools import wraps
 
 from flask import Blueprint, render_template, url_for, request, redirect, session
-from piecash import open_book
+from flask import current_app as app
 from sqlalchemy.exc import OperationalError
 
-from flask import current_app as app
+from .utils.gnucash import open_book, AccessDenied
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-class AccessDenied(Exception):
-    pass
 
 @bp.app_errorhandler(AccessDenied)
 def handle_account_not_found(e: AccessDenied):
@@ -30,7 +27,9 @@ def authenticate(username, password):
         return True
     elif app.config.AUTH_MECHANISM == 'passthrough':
         try:
-            with open_book(uri_conn=app.config.DB_URI(username, password)) as book:
+            # Check authn by attempting to connect to database
+            with open_book(uri_conn=app.config.DB_URI(username, password),
+                           readonly=True, open_if_lock=True) as book:
                 app.logger.debug(f'Authentication succeeded for {username}')
                 session['username'] = username
                 session['password'] = password
