@@ -107,7 +107,7 @@
               | selectattr('commodity', 'eq', account.commodity)
               | rejectattr('placeholder')
               | sort(attribute='fullname') %}
-              <option value={{ contra_account.fullname }}>{{ contra_account.fullname | display }}</option>
+              <option value="{{ contra_account.fullname }}">{{ contra_account.fullname | display }}</option>
             {% endfor %}
           </select>
         </div>

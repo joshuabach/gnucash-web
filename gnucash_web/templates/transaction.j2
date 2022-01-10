@@ -21,12 +21,11 @@
     {# We do not really support split transactions: Simply display all contra accounts #}
     {% for account in split.transaction.splits
       | map(attribute='account')
-      | map(attribute='fullname')
-      | reject('eq', split.account.fullname) %}
-      <a href="{{ url_for('book.show_account') }}{{ account | replace(':', '/') }}">
+      | rejectattr('fullname', 'eq', split.account.fullname) %}
+      <a href="{{ account | accounturl }}">
         {# Display account name, line-breakable /only/ at the colons #}
         <span class="no-text-break">
-          {{- account | replace(':', '</span>:<span class="no-text-break">'|safe) -}}
+          {{- account.fullname | display | replace(':', '</span>:<span class="no-text-break">' | safe) -}}
         </span>
       </a>{% if not loop.last %}, {% endif %}
     {% endfor %}
