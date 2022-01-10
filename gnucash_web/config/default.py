@@ -1,6 +1,6 @@
 import logging
 
-SECRET_KEY = 'devel'
+SECRET_KEY = b'00000000000000000000000000000000'
 
 LOG_LEVEL = logging.WARN
 
