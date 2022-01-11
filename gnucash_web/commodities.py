@@ -54,6 +54,9 @@ def update_prices(ctx):
                    readonly=False, do_backup=False, open_if_lock=False) as book:
 
         old_prices = {}
+
+        # Update prices (relative to book.default_currency) of all relevant
+        # commodities
         for commodity in book.commodities:
             old_prices[commodity] = latest_price(commodity)
             if commodity.quote_flag and commodity != book.default_currency:
@@ -63,17 +66,17 @@ def update_prices(ctx):
         # changes later
         book.save()
 
+        # Print price changes
         for commodity in book.commodities:
             old_price = old_prices[commodity]
             new_price = latest_price(commodity)
             if new_price:
-                if old_price:
-                    if new_price.date > old_price.date:
-                        print(f'New price for {commodity.mnemonic}:'
-                              f' {format_price(old_price)}@{old_price.date}'
-                              f' -> {format_price(new_price)}@{new_price.date}')
+                if old_price and new_price.date > old_price.date:
+                    print(f'New price for {commodity.mnemonic}:'
+                          f' {format_price(old_price)}@{old_price.date}'
+                          f' -> {format_price(new_price)}@{new_price.date}')
                 else:
-                    print(f'Price for {commodity.namespace}:{commodity.menmonic}:'
+                    print(f'Price for {commodity.menmonic}:'
                           f' {format_price(new_price)}@{new_price.dat}')
 
 
