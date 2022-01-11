@@ -7,7 +7,7 @@ from flask import Flask, redirect, url_for
 from flask.cli import FlaskGroup
 import click
 
-from . import auth, book
+from . import auth, book, commodities
 from .utils import jinja as jinja_utils
 from .config import GnuCashWebConfig
 
@@ -51,6 +51,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(book.bp)
+    app.register_blueprint(commodities.bp)
 
     @app.route('/')
     def index():
@@ -60,5 +61,7 @@ def create_app(test_config=None):
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)
-def cli():
+@click.option('--username')
+@click.option('--password')
+def cli(username, password):
     """GnuCash Web - A simple, easy to use, mobile-friendly webinterface intended for self-hosting"""

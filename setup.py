@@ -49,6 +49,7 @@ setup(
         'piecash>=1.2.0',
         'pycryptodome>=3.12.0',
         'babel>=2.9.1',
+        'requests>=2.27.1',
     ],
     extras_require={
         'PostgreSQL backend': 'psycopg2',
