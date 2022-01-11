@@ -19,11 +19,11 @@ class GnuCashWebConfig(Config):
 
         if CONFIG_ENVVAR in os.environ:
             if os.environ[CONFIG_ENVVAR]:
-                app.logger.info(f'Reading config file {os.environ[CONFIG_ENVVAR]}')
+                app.logger.debug(f'Reading config file {os.environ[CONFIG_ENVVAR]}')
                 self.from_envvar(CONFIG_ENVVAR)
         else:
             for path in filter(os.path.isfile, CONFIG_FILES):
-                app.logger.info(f'Reading config file {path}')
+                app.logger.debug(f'Reading config file {path}')
                 self.from_pyfile(path)
 
     def DB_URI(self, user=None, password=None):
