@@ -5,6 +5,7 @@ from flask import request
 import piecash
 import sqlalchemy
 
+
 class AccessDenied(Exception):
     pass
 
@@ -21,23 +22,26 @@ class DatabaseLocked(Locked):
 @contextmanager
 def open_book(*args, **kwargs):
     try:
-        if 'open_if_lock' not in kwargs:
-            kwargs['open_if_lock'] = request.args.get('open_if_lock', default=False, type=bool)
+        if "open_if_lock" not in kwargs:
+            kwargs["open_if_lock"] = request.args.get(
+                "open_if_lock", default=False, type=bool
+            )
 
         with piecash.open_book(*args, **kwargs) as book:
             yield book
 
     except piecash.GnucashException as e:
-        if 'Lock on the file' in str(e):
+        if "Lock on the file" in str(e):
             raise DatabaseLocked()
         else:
             raise e
 
     except sqlalchemy.exc.OperationalError as e:
-        if 'Access denied' in str(e):
+        if "Access denied" in str(e):
             raise AccessDenied from e
         else:
             raise e
+
 
 def get_account(book, *args, **kwargs):
     try:

@@ -1,5 +1,3 @@
-from datetime import date, timedelta
-
 from flask import (
     Blueprint,
     current_app as app,
@@ -10,48 +8,61 @@ from piecash.core.commodity import Price
 
 from .utils.gnucash import open_book
 
-bp = Blueprint('commodities', __name__, url_prefix='/commodities')
+bp = Blueprint("commodities", __name__, url_prefix="/commodities")
+
 
 def latest_price(commodity):
     return commodity.prices.order_by(Price.date.desc()).limit(1).first()
 
-def format_price(price):
-    return numbers.format_currency(price.value, price.currency.mnemonic);
 
-@bp.cli.command('list')
-@click.option('--namespace', help='Filter by namespace')
+def format_price(price):
+    return numbers.format_currency(price.value, price.currency.mnemonic)
+
+
+@bp.cli.command("list")
+@click.option("--namespace", help="Filter by namespace")
 @click.pass_context
 def list_commodities(ctx, namespace):
     """List Commodities"""
     opts = ctx.find_root().params
 
-    with open_book(uri_conn=app.config.DB_URI(opts.get('username'), opts.get('password')),
-                   readonly=True, open_if_lock=True) as book:
+    with open_book(
+        uri_conn=app.config.DB_URI(opts.get("username"), opts.get("password")),
+        readonly=True,
+        open_if_lock=True,
+    ) as book:
         if namespace:
             commodities = book.commodities(namespace=namespace)
         else:
             commodities = book.commodities
 
         for commodity in commodities:
-            print(f'{commodity.namespace}:{commodity.mnemonic} ({commodity.cusip})')
-            print(f'  Traded fraction: {1/commodity.fraction}')
+            print(f"{commodity.namespace}:{commodity.mnemonic} ({commodity.cusip})")
+            print(f"  Traded fraction: {1/commodity.fraction}")
 
             if commodity.quote_flag:
-                print(f'  Quote Source: {commodity.quote_source} (ignored)')
+                print(f"  Quote Source: {commodity.quote_source} (ignored)")
 
             price = latest_price(commodity)
             if price:
-                print(f'  Latest known price: {numbers.format_currency(price.value, price.currency.mnemonic)}'
-                      f' ({price.source}@{price.date})')
+                print(
+                    f"  Latest known price: {format_price(price)}"
+                    f" ({price.source}@{price.date})"
+                )
 
-@bp.cli.command('update_prices')
+
+@bp.cli.command("update_prices")
 @click.pass_context
 def update_prices(ctx):
     """Update prices for all commodities for which it is enabled"""
     opts = ctx.find_root().params
 
-    with open_book(uri_conn=app.config.DB_URI(opts.get('username'), opts.get('password')),
-                   readonly=False, do_backup=False, open_if_lock=False) as book:
+    with open_book(
+        uri_conn=app.config.DB_URI(opts.get("username"), opts.get("password")),
+        readonly=False,
+        do_backup=False,
+        open_if_lock=False,
+    ) as book:
 
         old_prices = {}
 
@@ -72,11 +83,13 @@ def update_prices(ctx):
             new_price = latest_price(commodity)
             if new_price:
                 if old_price and new_price.date > old_price.date:
-                    print(f'New price for {commodity.mnemonic}:'
-                          f' {format_price(old_price)}@{old_price.date}'
-                          f' -> {format_price(new_price)}@{new_price.date}')
+                    print(
+                        f"New price for {commodity.mnemonic}:"
+                        f" {format_price(old_price)}@{old_price.date}"
+                        f" -> {format_price(new_price)}@{new_price.date}"
+                    )
                 else:
-                    print(f'Price for {commodity.menmonic}:'
-                          f' {format_price(new_price)}@{new_price.dat}')
-
-
+                    print(
+                        f"Price for {commodity.menmonic}:"
+                        f" {format_price(new_price)}@{new_price.dat}"
+                    )

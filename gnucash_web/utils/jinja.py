@@ -7,8 +7,9 @@ from babel import numbers
 from markupsafe import Markup, escape
 from jinja2 import Environment, BaseLoader, pass_eval_context
 
+
 def safe_display_string(string):
-    return re.sub('^\s*$', '<blank string>', string)
+    return re.sub('^\\s*$', '<blank string>', string)
 
 
 def css_escape(name):
@@ -21,7 +22,7 @@ def css_escape(name):
 
     """
     #  escape account.fullname as CSS name
-    return re.sub('(?=[\\x00-\\x7f])([^_a-zA-Z0-9-])', '\\\\\\1', name)
+    return re.sub("(?=[\\x00-\\x7f])([^_a-zA-Z0-9-])", "\\\\\\1", name)
 
 
 def parent_accounts(account):
@@ -35,32 +36,37 @@ def money(eval_ctx, amount, commodity):
     if numbers.get_currency_symbol(commodity.mnemonic) != commodity.mnemonic:
         value = numbers.format_currency(amount, commodity.mnemonic)
     else:
-        value = f'{amount} {commodity.mnemonic}'
+        value = f"{amount} {commodity.mnemonic}"
 
     if eval_ctx.autoescape:
         value = escape(value)
 
-    return Markup(Environment(loader=BaseLoader()).from_string('''
+    return Markup(
+        Environment(loader=BaseLoader())
+        .from_string(
+            """
       <span class="text-{% if amount >= 0 %}secondary{% else %}danger{% endif %}">
         {{ value }}
       </span>
-    ''').render(amount=amount, value=value))
+    """
+        )
+        .render(amount=amount, value=value)
+    )
 
 
 def account_url(account):
-    # Percent-encode each account name individually (important when account name contains
-    # slashes) and then join with slashes
-    return Markup(url_for(
-        'book.show_account',
-        account_name='/'.join(
-            quote_plus(account.name)
-            for account in islice(parent_accounts(account), 1, None)  # Skip root account
+    return Markup(
+        url_for(
+            "book.show_account",
+            account_name="/".join(
+                quote_plus(account.name)
+                for account in islice(
+                    parent_accounts(account), 1, None
+                )  # Skip root account
+            ),
         )
-    ))
+    )
 
 
 def full_account_names(account_name):
-    return accumulate(
-        account_name.split(':'),
-        lambda sup, sub: sup + ':' + sub
-    )
+    return accumulate(account_name.split(":"), lambda sup, sub: sup + ":" + sub)

@@ -1,6 +1,4 @@
 import os
-import sys
-import pathlib
 from importlib import metadata
 
 from flask import Flask, redirect, url_for
