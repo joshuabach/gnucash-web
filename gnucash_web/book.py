@@ -1,3 +1,4 @@
+"""Functions for interacting with a GnuCash book."""
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from urllib.parse import unquote_plus, urlencode
@@ -16,13 +17,26 @@ bp = Blueprint("book", __name__, url_prefix="/book")
 
 @bp.app_errorhandler(AccountNotFound)
 def handle_account_not_found(e: AccountNotFound):
+    """Show error page about the desired account not being found.
+
+    :param e: The underlying AccountNotFound exception
+    :returns: Rendered HTTP Response
+
+    """
     body = render_template("error_account_not_found.j2", account_name=e.account_name)
     return body, e.code
 
+
 @bp.app_errorhandler(DatabaseLocked)
 def handle_database_locked(e: DatabaseLocked):
-    # Generate path to current view, but with open_if_lock=True
+    """Show error page about the database beeing accessed by another user.
 
+    Includes option to repeat the causing action ignoring the lock.
+
+    :param e: The underlying DatabaseLocked exception
+    :returns: Rendered HTTP Response
+
+    """
     # Generate path to current view, but with open_if_lock=True
     query = {"open_if_lock": "True"}
     query.update(request.args)
@@ -39,8 +53,19 @@ def handle_database_locked(e: DatabaseLocked):
 @bp.route("/accounts/", defaults={"account_name": ""})
 @requires_auth
 def show_account(account_name):
-    # Pendant to `account_url`
+    """Show the given account, including all subaccounts and transactions.
 
+    If the account has subaccounts, a collapsible tree view of them is rendered.
+
+    Additionally, if the account is not a placeholder, a ledger listing all
+    transaction in the account is rendered, including a HTML form to add a new
+    transaction.
+
+    :param account_name: Name of the account, with / as account name separator. Each
+      componnent of the account name must be urlencoded.
+    :returns: Rendered HTTP Response
+
+    """
     account_name = ":".join(unquote_plus(name) for name in account_name.split("/"))
 
     with open_book(
@@ -65,6 +90,22 @@ def show_account(account_name):
 @bp.route("/transaction", methods=["POST"])
 @requires_auth
 def add_transaction():
+    """Add a new Transaction.
+
+    All parameters are read from `request.form`.
+
+    A positive value will transfer the desired amount from the contra account the
+    receiver account ("this" account), while a negative value will deduct from the
+    receiver account and credit to the contra account. Or, in other words, a negative
+    value is an expense, a positive value is an income.
+
+    :param account_name: Name of the receiver account
+    :param transaction_date: Date of the transaction
+    :param description: Transaction description (not split memo)
+    :param value: Value of the transaction
+    :param contra_account_name: Name of the contra account
+
+    """
     try:
         account_name = request.form["account_name"]
         transaction_date = date.fromisoformat(request.form["date"])
@@ -97,10 +138,10 @@ def add_transaction():
 
         common_currency = account.commodity
 
-        # This can not fail, since currency is a valid commodity, description can be any
-        # string, post_date is a valid datetime.date, account and contra_account are valid
-        # non-placeholder accounts and value is a Decimal. Any other error should be
-        # considered a bug.
+        # This can not fail, since currency is a valid commodity, description can be
+        # any string, post_date is a valid datetime.date, account and contra_account
+        # are valid non-placeholder accounts and value is a Decimal. Any other error
+        # should be considered a bug.
         _ = Transaction(
             currency=common_currency,
             description=description,

@@ -1,3 +1,4 @@
+"""Flask app for GnuCash Web."""
 import os
 from importlib import metadata
 
@@ -13,14 +14,22 @@ from encrypted_session import EncryptedSessionInterface
 
 
 def create_app(test_config=None):
+    """Create Flask app.
+
+    Flask App factory.
+
+    :param test_config: Optional testing config file
+    :returns:
+
+    """
     app = Flask('gnucash_web')
     app.config = GnuCashWebConfig(app)
 
     if not app.debug:
         app.logger.setLevel(app.config.LOG_LEVEL)
 
-    # We encrypt the session-cookie, so the DB-password is not stored in plaintext when using
-    # AUTH_MECHANISM == 'passthrough'.
+    # We encrypt the session-cookie, so the DB-password is not stored in plaintext
+    # when using AUTH_MECHANISM == 'passthrough'.
     app.session_interface = EncryptedSessionInterface()
 
     if test_config is None:
@@ -62,4 +71,4 @@ def create_app(test_config=None):
 @click.option('--username')
 @click.option('--password')
 def cli(username, password):
-    """GnuCash Web - A simple, easy to use, mobile-friendly webinterface intended for self-hosting"""
+    """Perform maintenance tasks on local GnuCash Web installation."""

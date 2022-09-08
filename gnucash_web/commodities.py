@@ -1,3 +1,4 @@
+"""Manage commodities in the GnuCash database."""
 from flask import (
     Blueprint,
     current_app as app,
@@ -12,10 +13,24 @@ bp = Blueprint("commodities", __name__, url_prefix="/commodities")
 
 
 def latest_price(commodity):
+    """Get latest known price for commodity.
+
+    :param commodity: The commodity in question. Must be different from the books
+      default currency
+
+    :returns: Latest known price of the commodity in the books default currency
+
+    """
     return commodity.prices.order_by(Price.date.desc()).limit(1).first()
 
 
 def format_price(price):
+    """Format price with currency according to current locale.
+
+    :param price: The price in question
+    :returns: Human-readable string
+
+    """
     return numbers.format_currency(price.value, price.currency.mnemonic)
 
 
@@ -23,7 +38,12 @@ def format_price(price):
 @click.option("--namespace", help="Filter by namespace")
 @click.pass_context
 def list_commodities(ctx, namespace):
-    """List Commodities"""
+    """List all used commodities.
+
+    :param ctx: Click application context
+    :param namespace: Filter by namespace
+
+    """
     opts = ctx.find_root().params
 
     with open_book(
@@ -54,7 +74,11 @@ def list_commodities(ctx, namespace):
 @bp.cli.command("update_prices")
 @click.pass_context
 def update_prices(ctx):
-    """Update prices for all commodities for which it is enabled"""
+    """Update prices for all commodities for which it is enabled.
+
+    :param ctx: Click application context
+
+    """
     opts = ctx.find_root().params
 
     with open_book(

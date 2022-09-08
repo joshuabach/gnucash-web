@@ -1,3 +1,4 @@
+"""Utilities for templates."""
 import re
 from urllib.parse import quote_plus
 from itertools import islice, accumulate
@@ -9,23 +10,39 @@ from jinja2 import Environment, BaseLoader, pass_eval_context
 
 
 def safe_display_string(string):
+    """Process string for HTML display.
+
+    If it is empty, `'<blank string>'` is shown instead.
+
+    :param string: The string to be displayed
+    :returns: Camera-ready version of the string
+
+    """
     return re.sub('^\\s*$', '<blank string>', string)
 
 
 def css_escape(name):
     """Escape string for usage as CSS id selector, as in '#{name}'.
 
-    This basically escapes anything in ASCII range, except [_A-zA-Z0-9-] with a preceding
-    backslash and keeps the rest untouched.
+    This basically escapes anything in ASCII range, except [_A-zA-Z0-9-] with a
+    preceding backslash and keeps the rest untouched.
 
     See https://www.w3.org/TR/CSS22/syndata.html for further information.
 
+    :param name: The name to be used as a CSS ID selector
+    :return: Escaped string
+
     """
-    #  escape account.fullname as CSS name
     return re.sub("(?=[\\x00-\\x7f])([^_a-zA-Z0-9-])", "\\\\\\1", name)
 
 
 def parent_accounts(account):
+    """Generate all parent accounts of the given account.
+
+    :param account: GnuCash account
+    :returns: Parent accounts
+
+    """
     if account:
         yield from parent_accounts(account.parent)
         yield account
@@ -33,6 +50,14 @@ def parent_accounts(account):
 
 @pass_eval_context
 def money(eval_ctx, amount, commodity):
+    """Render monetary value for human consumption.
+
+    :param eval_ctx: Jinja evaluation context
+    :param amount: The amount to be displayed
+    :param commodity: Commodity in which the amount is represented
+    :returns: HTML snippet
+
+    """
     if numbers.get_currency_symbol(commodity.mnemonic) != commodity.mnemonic:
         value = numbers.format_currency(amount, commodity.mnemonic)
     else:
@@ -55,6 +80,15 @@ def money(eval_ctx, amount, commodity):
 
 
 def account_url(account):
+    """Get URL to view the given account.
+
+    Percent-encodes each account name individually (important when account name contains
+    slashes) and then joins the components with slashes.
+
+    :param account: The target account
+    :returns: URL suitable for redirection ore use as hyperlink
+
+    """
     return Markup(
         url_for(
             "book.show_account",
@@ -69,4 +103,15 @@ def account_url(account):
 
 
 def full_account_names(account_name):
+    """Return list of full account names for all parent accounts of the given account.
+
+    Goes up to, but not including the root account.
+
+    Does only string operations, no actual querying of the accounts with piecash and
+    is thus safe for use with non-existent accounts.
+
+    :param account_name: Account name in question.
+    :returns: List of parent account names
+
+    """
     return accumulate(account_name.split(":"), lambda sup, sub: sup + ":" + sub)

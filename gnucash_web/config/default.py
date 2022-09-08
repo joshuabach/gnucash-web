@@ -1,3 +1,4 @@
+"""Default GnuCash Web configuration."""
 import logging
 
 SECRET_KEY = b'00000000000000000000000000000000'
