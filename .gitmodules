@@ -7,3 +7,6 @@
 [submodule "gnucash"]
 	path = gnucash
 	url = https://github.com/Gnucash/gnucash
+[submodule "selectize"]
+	path = selectize
+	url = https://github.com/selectize/selectize.js.git

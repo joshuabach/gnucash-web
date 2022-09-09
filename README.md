@@ -186,6 +186,7 @@ the GNU General Public License.
 
 The contents of the submodules
 [EncryptedSession](https://github.com/SaintFlipper/EncryptedSession) (GPLv3),
+[Selectize](https://github.com/selectize/selectize.js) (Apache License 2.0),
 [Bootstrap](https://github.com/twbs/bootstrap) (MIT License) and
 [GnuCash](https://github.com/Gnucash/gnucash) (mutually-compatible set of licenses) as
 well as all dependencies are published under their own licenses by their respective authors.

@@ -7,6 +7,7 @@
     <link href="{{ url_for('static', filename='img/official/16x16/apps/gnucash-icon.png') }}" rel="icon" type="image/png">
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='gnucash-web.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='selectize/css/selectize.bootstrap5.css') }}" rel="stylesheet">
 
     <title>{% block title %}{% endblock %} — GnuCash Web</title>
     {% block head %}{% endblock %}
@@ -63,8 +64,10 @@
       </div>
     </footer>
 
+    <script src="{{ url_for('static', filename='jquery-3.6.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='gnucash-web.js') }}"></script>
+    <script src="{{ url_for('static', filename='selectize/js/standalone/selectize.min.js') }}"></script>
   </body>
 </html>
 
