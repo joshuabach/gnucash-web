@@ -77,14 +77,14 @@
       <div class="row align-items-center justify-content-between gap-0">
         {# Transaction description #}
         <div class="col-9 pe-0">
-          <input class="form-control form-control-sm" form="add_transaction"
+          <input class="form-control" form="add_transaction"
                  placeholder="Description" name="description" type="text" id="description"
                  required>
         </div>
 
         {# Amount to be transfered #}
         <div class="col-3 ps-0">
-          <input class="form-control form-control-sm" form="add_transaction"
+          <input class="form-control" form="add_transaction"
                  placeholder="Value" name="value" type="number"
                  step="{{ 1 / account.commodity.fraction }}"
                  required>
@@ -94,22 +94,33 @@
       <div class="row align-items-center justify-content-between">
         {# Date of the transaction (default today #}
         <div class="col-4 pe-0">
-          <input class="form-control form-control-sm" form="add_transaction"
+          <input class="form-control" form="add_transaction"
                  name="date" type="date" value="{{ today.isoformat() }}"
                  required>
         </div>
 
         {# Selectable contra accounts are all other account of the same commodity, which are not placeholders #}
         <div class="col-8 ps-0">
-          <select class="form-select form-select-sm" form="add_transaction" name="contra_account_name">
+          <select class="form-select" form="add_transaction" name="contra_account_name" id="add_transaction-contra_account_name">
             {% for contra_account in book.accounts
               | rejectattr('fullname', 'eq', account.fullname)
               | selectattr('commodity', 'eq', account.commodity)
               | rejectattr('placeholder')
-              | sort(attribute='fullname') %}
-              <option value="{{ contra_account.fullname }}">{{ contra_account.fullname | display }}</option>
+              | sort(attribute='splits.length,fullname') %}
+              <option value="{{ contra_account.fullname }}" {% if contra_account.fullname == config.PRESELECTED_CONTRA_ACCOUNT %}selected=true{% endif %}>
+                {{ contra_account.fullname | display }}
+              </option>
             {% endfor %}
           </select>
+          <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              $("select#add_transaction-contra_account_name").removeClass("form-select");
+              $("select#add_transaction-contra_account_name").selectize({
+                maxItems: 1,
+                items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
+              });
+            });
+          </script>
         </div>
       </div>
 
