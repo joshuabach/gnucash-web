@@ -115,3 +115,7 @@ def full_account_names(account_name):
 
     """
     return accumulate(account_name.split(":"), lambda sup, sub: sup + ":" + sub)
+
+def nth(iterable, n, default=None):
+    "Returns the nth item or a default value"
+    return next(islice(iterable, n, None), default)
