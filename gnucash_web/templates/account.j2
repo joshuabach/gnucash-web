@@ -121,12 +121,33 @@
       </div>
     </div>
 
+    {% macro pagenav(current_page, num_pages) %}
+      {% if num_pages > 1 %}
+        <nav aria-label="Transaction pages" class="my-2">
+          <ul class="pagination justify-content-center">
+            <li class="page-item {% if page==1 %}disabled{% endif %}">
+              <a class="page-link" href="{{ account | accounturl(page=page-1) }}">Previous</a>
+            </li>
+            {% for p in range(1,num_pages+1) %}
+              <li class="page-item {% if p==page %}active{% endif %}">
+                <a class="page-link" {% if p!=page %}href="{{ account | accounturl(page=p) }}"{% endif %}>{{ p }}</a>
+              </li>
+            {% endfor %}
+            <li class="page-item {% if page==num_pages %}disabled{% endif %}">
+             <a class="page-link" href="{{ account | accounturl(page=page+1) }}">Next</a>
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
+    {% endmacro %}
+
     <div id="transactions" class="my-2">
-      {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num', reverse=True) %}
+      {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num', reverse=True) | slice(num_pages) | nth(page-1) %}
         <div class="{% if loop.index % 2 %}bg-light{% endif %} border-top {% if loop.last %}border-bottom{% endif %}">
           {% include 'transaction.j2' %}
         </div>
       {% endfor %}
+      {{ pagenav(page, num_pages) }}
     </div>
   {% endif %}
 {% endblock content %}

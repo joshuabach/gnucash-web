@@ -79,7 +79,7 @@ def money(eval_ctx, amount, commodity):
     )
 
 
-def account_url(account):
+def account_url(account, *args, **kwargs):
     """Get URL to view the given account.
 
     Percent-encodes each account name individually (important when account name contains
@@ -98,6 +98,8 @@ def account_url(account):
                     parent_accounts(account), 1, None
                 )  # Skip root account
             ),
+            *args,
+            **kwargs,
         )
     )
 

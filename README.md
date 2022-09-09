@@ -85,6 +85,9 @@ DB_NAME = 'gnucash_data'
 
 # Supported values: None, 'passthrough'. See below for details.
 AUTH_MECHANISM = None
+
+# The maximum number of transactions per page in the ledger
+TRANSACTION_PAGE_LENGTH = 25
 ```
 
 ### Running

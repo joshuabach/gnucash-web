@@ -9,3 +9,5 @@ DB_DRIVER = 'sqlite'
 DB_NAME = 'db/gnucash.sqlite'
 
 AUTH_MECHANISM = None
+
+TRANSACTION_PAGE_LENGTH = 25

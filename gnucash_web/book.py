@@ -2,6 +2,7 @@
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from urllib.parse import unquote_plus, urlencode
+from math import ceil
 
 from flask import render_template, request, redirect, Blueprint
 from flask import current_app as app
@@ -66,7 +67,14 @@ def show_account(account_name):
     :returns: Rendered HTTP Response
 
     """
-    account_name = ":".join(unquote_plus(name) for name in account_name.split("/"))
+    try:
+        account_name = ":".join(unquote_plus(name) for name in account_name.split("/"))
+        page = int(request.args.get('page', 1))
+    except ValueError as e:
+        raise BadRequest(f'Invalid query parameter: {e}') from e
+
+    if page < 1:
+        raise BadRequest(f'Invalid query parameter: page number must be positive integer: {page}')
 
     with open_book(
         uri_conn=app.config.DB_URI(*get_db_credentials()),
@@ -79,11 +87,17 @@ def show_account(account_name):
             else book.root_account
         )
 
+        num_pages = max(1, ceil(len(account.splits) / app.config.TRANSACTION_PAGE_LENGTH))
+        if page > num_pages:
+            raise BadRequest(f'Invalid query parameter: not enough pages: {page} > {num_pages}')
+
         return render_template(
             "account.j2",
             account=account,
             book=book,
             today=date.today(),
+            num_pages=num_pages,
+            page=page,
         )
 
 
