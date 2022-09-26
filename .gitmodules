@@ -10,3 +10,6 @@
 [submodule "selectize"]
 	path = selectize
 	url = https://github.com/selectize/selectize.js.git
+[submodule "bootstrap-icons"]
+	path = bootstrap-icons
+	url = https://github.com/twbs/icons.git
