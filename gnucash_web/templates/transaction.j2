@@ -1,32 +1,94 @@
-{# First row: description and amount #}
-<div class="row align-items-center justify-content-between">
-  <div class="col-9 fw-bolder">{{ split.transaction.description }}</div>
-  <div class="col-3 text-end">
-    <span class="float-end fs-7">
-      {{ split.value | money(split.transaction.currency) }}
-    </span>
+<div class="row">
+  <div class="col-1 text-center">
+    <i class="btn gnc-transaction-detail-button bi bi-chevron-down"
+            role="button"
+            data-bs-toggle="collapse" data-bs-target="#transaction-details-{{ loop.index }}"
+            data-gnc-switch=".gnc-transaction-general-{{ loop.index }}">
+    </i>
+  </div>
+  <div class="col-11 gnc-transaction-general-{{ loop.index }}">
+    {# First row: description and amount #}
+    <div class="row align-items-center justify-content-between">
+      <div class="col-9 fw-bolder">{{ split.transaction.description }}</div>
+      <div class="col-3 text-end">
+        <span class="float-end fs-7">
+          {{ split.value | money(split.transaction.currency) }}
+        </span>
+      </div>
+    </div>
+
+    {# Second row: date and contra accounts #}
+    <div class="row align-items-center justify-content-between">
+      <div class="col-3">
+        {{ split.transaction.post_date -}}
+        {%- if split.transaction.num -%}
+          #{{ split.transaction.num }}
+        {% endif %}
+      </div>
+
+      <div class="col-9 text-end text-break">
+        {# We do not really support split transactions: Simply display all contra accounts #}
+        {% for account in split | contrasplits
+          | map(attribute='account') %}
+          {# Display account name, line-breakable /only/ at the colons #}
+          <a href="{{ account | accounturl }}"><span class="no-text-break">
+              {{- account.fullname | display | replace(':', '</span>:<span class="no-text-break">' | safe) -}}
+          </span></a>
+          {%- if not loop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-11 hidden gnc-transaction-general-{{ loop.index }}">
+    <div class="row">
+      <div class="col-9">
+        <div class="row">
+          <div class="col fw-bolder">{{ split.transaction.description }}</div>
+        </div>
+        <div class="row">
+          <div class="col">
+            {{ split.transaction.post_date -}}
+            {%- if split.transaction.num -%}
+              #{{ split.transaction.num }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-3 d-flex justify-content-end">
+        <div class="btn-group p-1" role="group">
+          <button role="button"
+                  class="btn btn-success bi bi-recycle {% if split.transaction.splits|length > 2 %}disabled{% else %}disabled{% endif %}" 
+                  onclick="transaction_recycle("{{- split.transaction.description -}}", {{- split.value -}}, {{- split.transaction.post_date -}}, 
+                  {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});"> 
+          </button>
+          <button role="button" class="btn btn-secondary bi bi-pencil disabled"></button>
+          <button role="button" class="btn btn-danger bi bi-trash disabled"></button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-{# Second row: date and contra accounts #}
-<div class="row align-items-center justify-content-between">
-  <div class="col-3">
-    {{ split.transaction.post_date -}}
-    {%- if split.transaction.num -%}
-      #{{ split.transaction.num }}
-    {% endif %}
-  </div>
-
-  <div class="col-9 text-end text-break">
-    {# We do not really support split transactions: Simply display all contra accounts #}
-    {% for account in split.transaction.splits
-      | map(attribute='account')
-      | rejectattr('fullname', 'eq', split.account.fullname) %}
-      {# Display account name, line-breakable /only/ at the colons #}
-      <a href="{{ account | accounturl }}"><span class="no-text-break">
-          {{- account.fullname | display | replace(':', '</span>:<span class="no-text-break">' | safe) -}}
-      </span></a>
-      {%- if not loop.last %}, {% endif %}
-    {% endfor %}
+<div class="row collapse" id="transaction-details-{{ loop.index }}">
+  <div class="col">
+    {% set outer_loop_index = loop.index %}
+    <ul class="list-group list-group-flush">
+      {% for other_split in split.transaction.splits %}
+        <li class="list-group-item {% if outer_loop_index % 2 %}bg-light{% endif %}">
+          <div class="row justify-content-center">
+            <div class="col-9 {% if split == other_split %}fw-bolder{% endif %}">
+              {# Display account name, line-breakable /only/ at the colons #}
+              <a href="{{ account | accounturl }}"><span class="no-text-break">
+                  {{- other_split.account.fullname | display | replace(':', '</span>:<span class="no-text-break">' | safe) -}}
+              </span></a>
+            </div>
+            <div class="col-3 text-end">
+              <span class="float-end fs-7">
+                {{ other_split.value | money(split.transaction.currency) }}
+              </span>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
   </div>
 </div>

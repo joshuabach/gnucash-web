@@ -2,6 +2,7 @@
 import re
 from urllib.parse import quote_plus
 from itertools import islice, accumulate
+from math import copysign
 
 from flask import url_for
 from babel import numbers
@@ -117,6 +118,16 @@ def full_account_names(account_name):
 
     """
     return accumulate(account_name.split(":"), lambda sup, sub: sup + ":" + sub)
+
+def contra_splits(split):
+    """Return list of splits on the other side of the given split in the transaction.
+
+    In other words, return all splits whose value has the opposite sign.
+
+    :param split: Split in question
+    :returns: List of contra splits
+    """
+    return [contra_split for contra_split in split.transaction.splits if copysign(split.value, contra_split.value) == -split.value ]
 
 def nth(iterable, n, default=None):
     "Returns the nth item or a default value"

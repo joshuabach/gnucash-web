@@ -18,4 +18,10 @@ document.addEventListener("DOMContentLoaded", function(){
         }
         last_scroll_top = scroll_top;
     });
+
+    $(".gnc-transaction-detail-button").click(function(){
+        $($(this).attr("data-gnc-switch")).toggleClass("hidden");
+        $(this).toggleClass("bi-chevron-up");
+        $(this).toggleClass("bi-chevron-down");
+    });
 });

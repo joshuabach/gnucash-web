@@ -52,6 +52,7 @@ def create_app(test_config=None):
     app.jinja_env.filters['money'] = jinja_utils.money
     app.jinja_env.filters['accounturl'] = jinja_utils.account_url
     app.jinja_env.filters['full_account_names'] = jinja_utils.full_account_names
+    app.jinja_env.filters['contrasplits'] = jinja_utils.contra_splits
     app.jinja_env.filters['nth'] = jinja_utils.nth
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
 
