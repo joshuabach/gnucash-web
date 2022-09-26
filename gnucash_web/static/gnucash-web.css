@@ -2,15 +2,14 @@ body {
     padding-top: 70px
 }
 .gnc-superaccount[data-bs-toggle].collapsed:before {
-    font-weight: 900;
-    content: "^";
+    content: "\f282";
     color:  #444444;
     position: relative;
     left: -4px;
 }
 .gnc-superaccount[data-bs-toggle]:not(.collapsed):before {
     font-weight: 900;
-    content: "v";
+    content: "\f286";
     color:  #444444;
     position: relative;
     left: -4px;

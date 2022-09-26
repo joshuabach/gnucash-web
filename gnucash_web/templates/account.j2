@@ -40,7 +40,7 @@
 
         {# Accounts with children are collapsed list group items toggling visibility of the subtree  #}
         <div class="list-group-item list-group-item-action text-break
-                    {% if account.children %}collapsed gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
+                    {% if account.children %}collapsed bi gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
              style="overflow: hidden"
              {% if account.children %}
                role="button"
