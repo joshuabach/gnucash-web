@@ -25,3 +25,9 @@ document.addEventListener("DOMContentLoaded", function(){
         $(this).toggleClass("bi-chevron-down");
     });
 });
+
+function transaction_recycle(description, value, postDate, contraAccounts) {
+    $("input[form=add_transaction][name=description]").attr("value", description);
+    $("input[form=add_transaction][name=value]").attr("value", value);
+    $("select[form=add_transaction][name=contra_account_name]")[0].selectize .addItem(contraAccounts[0]);
+}

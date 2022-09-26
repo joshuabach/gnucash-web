@@ -57,9 +57,11 @@
       <div class="col-3 d-flex justify-content-end">
         <div class="btn-group p-1" role="group">
           <button role="button"
-                  class="btn btn-success bi bi-recycle {% if split.transaction.splits|length > 2 %}disabled{% else %}disabled{% endif %}" 
-                  onclick="transaction_recycle("{{- split.transaction.description -}}", {{- split.value -}}, {{- split.transaction.post_date -}}, 
-                  {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});"> 
+                  class="btn btn-success bi bi-recycle {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
+                  onclick='transaction_recycle("{{- split.transaction.description -}}",
+                                               {{- split.value -}},
+                                               {{- split.transaction.post_date -}},
+                                               {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});'>
           </button>
           <button role="button" class="btn btn-secondary bi bi-pencil disabled"></button>
           <button role="button" class="btn btn-danger bi bi-trash disabled"></button>
