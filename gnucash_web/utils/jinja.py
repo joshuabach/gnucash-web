@@ -127,7 +127,7 @@ def contra_splits(split):
     :param split: Split in question
     :returns: List of contra splits
     """
-    return [contra_split for contra_split in split.transaction.splits if copysign(split.value, contra_split.value) == -split.value ]
+    return [contra_split for contra_split in split.transaction.splits if copysign(split.value, contra_split.value) == -float(split.value) ]
 
 def nth(iterable, n, default=None):
     "Returns the nth item or a default value"
