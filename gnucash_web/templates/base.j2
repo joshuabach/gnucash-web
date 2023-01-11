@@ -15,7 +15,7 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-light fixed-top">
       <div class="container-fluid">
         <a href="{{ url_for('index') }}"
            class="navbar-brand">
@@ -31,7 +31,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbar-content">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
               {% block account_header %}
                 <a class="nav-link" href="{{ url_for('book.show_account') }}">Accounts</a>
