@@ -57,15 +57,24 @@
       <div class="col-5 text-end">
         <div class="btn-group pt-1 pe-1" role="group">
           <button role="button"
-                  class="btn btn-success bi bi-recycle {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
+                  class="btn btn-success bi bi-recycle
+                         {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
                   onclick='transaction_recycle("{{- split.transaction.description -}}",
                                                {{- split.value -}},
                                                {{- split.transaction.post_date -}},
                                                {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});'>
           </button>
           <button role="button" class="btn btn-secondary bi bi-pencil disabled"></button>
-          <button role="button" class="btn btn-danger bi bi-trash disabled"></button>
+
+          <button role="button" "type=submit" class="btn btn-danger bi bi-trash"
+                  form="del_transaction-{{ split.transaction.guid }}"></button>
         </div>
+        <form id="del_transaction-{{ split.transaction.guid }}"
+              onsubmit="return confirm('Do you really want to delete transaction \'{{ split.transaction.description }}\' from {{ split.transaction.post_date }}?');"
+              action="{{ url_for('book.del_transaction') }}" method="post">
+          <input type="hidden" name="guid" value="{{ split.transaction.guid }}">
+          <input type="hidden" name="account_name" value="{{ account.fullname }}">
+        </form>
       </div>
     </div>
   </div>

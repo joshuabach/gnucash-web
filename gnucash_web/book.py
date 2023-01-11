@@ -101,7 +101,7 @@ def show_account(account_name):
         )
 
 
-@bp.route("/transaction", methods=["POST"])
+@bp.route("/add_transaction", methods=["POST"])
 @requires_auth
 def add_transaction():
     """Add a new Transaction.
@@ -165,6 +165,37 @@ def add_transaction():
                 Split(account=contra_account, value=-value),
             ],
         )
+
+        book.save()
+
+        return redirect(account_url(account))
+
+
+@bp.route("/del_transaction", methods=["POST"])
+@requires_auth
+def del_transaction():
+    """Delete an existing Transaction.
+
+    All parameters are read from `request.form`.
+
+    :param guid: GUID of the transaction to be deleted
+    :param account_name: The Account from which the deletion was initiated
+    """
+    try:
+        guid = request.form["guid"]
+        account_name = request.form["account_name"]
+    except (InvalidOperation, ValueError) as e:
+        raise BadRequest(f"Invalid form parameter: {e}") from e
+
+    with open_book(
+        uri_conn=app.config.DB_URI(*get_db_credentials()),
+        readonly=False,
+        do_backup=False,
+    ) as book:
+        account = get_account(book, fullname=account_name)
+        transaction = book.transactions.get(guid=guid)
+
+        book.delete(transaction)
 
         book.save()
 
