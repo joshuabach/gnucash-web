@@ -108,7 +108,7 @@
               | rejectattr('placeholder')
               | sort(attribute='splits.length,fullname') %}
               <option value="{{ contra_account.fullname }}" {% if contra_account.fullname == config.PRESELECTED_CONTRA_ACCOUNT %}selected=true{% endif %}>
-                {{ contra_account.fullname | display }}
+                {{- contra_account.fullname | display  -}}
               </option>
             {% endfor %}
           </select>
@@ -118,6 +118,12 @@
               $("select#add_transaction-contra_account_name").selectize({
                 maxItems: 1,
                 items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
+                onType: function(text) {
+                  // Workaround for https://github.com/selectize/selectize.js/issues/113
+                  if (text.length <= 1) {
+                    this.clear();
+                  }
+                },
               });
             });
           </script>
