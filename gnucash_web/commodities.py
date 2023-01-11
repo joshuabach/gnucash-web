@@ -114,6 +114,6 @@ def update_prices(ctx):
                     )
                 else:
                     print(
-                        f"Price for {commodity.menmonic}:"
+                        f"Price for {commodity.mnemonic}:"
                         f" {format_price(new_price)}@{new_price.dat}"
                     )
