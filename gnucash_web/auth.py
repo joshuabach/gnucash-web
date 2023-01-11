@@ -70,6 +70,7 @@ def requires_auth(func):
 def login():
     if request.method == 'POST':
        authenticate(request.form['username'], request.form['password'])
+       session.permanent = True
        return redirect(request.args.get('return_url') or url_for('.login'))
     else:
         if is_authenticated():
