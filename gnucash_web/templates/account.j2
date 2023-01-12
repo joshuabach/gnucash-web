@@ -46,7 +46,7 @@
              {% if account.children %}
                role="button"
                data-bs-toggle="collapse"
-               href="#{{ account.fullname | cssescape }}"
+               data-bs-target="#{{ account.fullname | cssescape }}"
              {% endif %}>
 
           <a {% if account.placeholder %}class="link-secondary"{% endif %} href="{{ account | accounturl }}">
@@ -60,7 +60,7 @@
 
         {% if account.children %}
           <div class="list-group-item list-group collapse gnc-account-group"
-               id="{{ account.fullname }}">
+               id="{{ account.fullname | cssescape }}">
                {{ loop(account.children) }}
           </div>
         {% endif %}

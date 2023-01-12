@@ -34,7 +34,7 @@ def css_escape(name):
     :return: Escaped string
 
     """
-    return re.sub("(?=[\\x00-\\x7f])([^_a-zA-Z0-9-])", "\\\\\\1", name)
+    return re.sub("(?=[\\x00-\\x7f])([^_a-zA-Z0-9-])", '\\\1', name)
 
 
 def parent_accounts(account):
