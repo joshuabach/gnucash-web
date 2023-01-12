@@ -20,8 +20,9 @@ go, e.g. to record a cash expense when buying a coffee.
 Key features include:
 
 - Browse account hierarchy
-- View non-split transaction history and balance for an account
-- Add non-split transactions
+- View transaction history and balance for an account
+- Add and edit simple two-split transactions, delete transactions
+- Recycle commonly used transactions
 - Simple single-user authentication
 - Ease of use, especially on mobile
 
@@ -83,10 +84,10 @@ SECRET_KEY = 'devel'
 LOG_LEVEL = logging.WARN
 
 # Supported values: 'sqlite', 'mysql' or 'postgres'
-DB_DRIVER = mysql
+DB_DRIVER = 'mysql'
 
 # Host name of the database (ignored for DB_DRIVER = 'sqlite')
-DB_HOST = database.example.org
+DB_HOST = 'database.example.org'
 
 # Name of the Database on the host (for DB_DRIVER = 'sqlite', this is the 'path/to/db.sqlite')
 DB_NAME = 'gnucash_data'
