@@ -38,8 +38,6 @@ document.addEventListener("DOMContentLoaded", function(){
             .attr("value", button.getAttribute('data-bs-transaction-value'));
         $("input[form=edit_transaction][name=date]")
             .attr("value", button.getAttribute('data-bs-transaction-post-date'));
-        $("select[form=edit_transaction][name=contra_account_name]")[0]
-            .selectize.addItem(button.getAttribute('data-bs-transaction-contra-account'));
 
         editTransactionModal.reset = function() {
             // Reset classic form inputs
@@ -49,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function(){
             $("select[form=edit_transaction][name=contra_account_name]")[0]
                 .selectize.addItem(button.getAttribute('data-bs-transaction-contra-account'));
         };
+
+        editTransactionModal.reset();
     });
 });
 
