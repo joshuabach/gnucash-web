@@ -172,11 +172,6 @@ Related Work
 ------------
 There seem to be few other projects in the same direction:
 
-**TL;DR**: All projects in this direction seem to be at most prototypes for playing
-around and even those are scarce. The GnuCash dev-team itself doesn't seem to be keen
-on providing a real mobile/web alternative, which is perfectly fine and
-understandable. I probably wouldn't either if I were them. Luckiliy, I am not!
-
 - The GnuCash mailing list(s) has a few results
   - In 2003, [Martin asked about
     this](https://lists.gnucash.org/pipermail/gnucash-user/2003-July/007243.html) and
@@ -206,6 +201,11 @@ understandable. I probably wouldn't either if I were them. Luckiliy, I am not!
   on GitHub, but the readme does not cleary state what it does. It seems to be only a
   exporter for certain reports. Anyway, it was archived in 2022, with last commit
   from 2018.
+
+To conclude, all projects in this direction seem to be at most prototypes for playing
+around and even those are scarce. The GnuCash dev-team itself doesn't seem to be keen
+on providing a real mobile/web alternative, which is perfectly fine and
+understandable. I probably wouldn't either if I were them. Luckiliy, I am not!
 
 License
 -------
