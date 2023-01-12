@@ -40,7 +40,7 @@ setup(
             'static/bootstrap-icon-font/*.css',
             'static/bootstrap-icon-font/fonts/*',
             'static/selectize/css/*.css',
-            'static/selectize/js/standalone/*.js',
+            'static/selectize/js/*.js',
             'static/img/official/*/apps/*',
         ],
     },
