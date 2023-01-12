@@ -14,21 +14,21 @@ more information.
 Features
 --------
 
-The primary use case for *GnuCash Web* is adding simple (non-split) transactions on the
+The primary use case for *GnuCash Web* is adding simple two-split transactions on the
 go, e.g. to record a cash expense when buying a coffee.
 
 Key features include:
 
 - Browse account hierarchy
 - View transaction history and balance for an account
-- Add and edit simple two-split transactions, delete transactions
+- Add and edit two-split transactions, delete transactions
 - Recycle commonly used transactions
 - Simple single-user authentication
 - Ease of use, especially on mobile
 
-| Browse account hierarchy                                                  | View and add transactions                                            |
-|---------------------------------------------------------------------------|----------------------------------------------------------------------|
-| ![Browse account hierarchy](/screenshots/book.accounts.list.png?raw=true) | ![View transactions](/screenshots/book.accounts.ledger.png?raw=true) |
+| Browse account hierarchy                                                  | View and add transactions                                                    | Edit transactions                                                                    |
+|---------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| ![Browse account hierarchy](/screenshots/book.accounts.list.png?raw=true) | ![View and add transactions](/screenshots/book.accounts.ledger.png?raw=true) | ![Edit transaction](/screenshots/book.accounts.ledger.transaction-edit.png?raw=true) |
 
 Core Technology Stack
 ---------------------
