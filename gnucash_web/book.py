@@ -116,16 +116,18 @@ def add_transaction():
     :param account_name: Name of the receiver account
     :param transaction_date: Date of the transaction
     :param description: Transaction description (not split memo)
-    :param value: Value of the transaction
+    :param value: The amount to be transferred
+    :param sign: The transactions sign: `+1` for deposit, `-1` for withdrawl
     :param contra_account_name: Name of the contra account
-
     """
+
     try:
         account_name = request.form["account_name"]
         transaction_date = date.fromisoformat(request.form["date"])
         description = request.form["description"]
         value = Decimal(request.form["value"])
         contra_account_name = request.form["contra_account_name"]
+        sign = int(request.form["sign"])
     except (InvalidOperation, ValueError) as e:
         # TODO: Say which parameter the error is about
         raise BadRequest(f"Invalid form parameter: {e}") from e
@@ -143,6 +145,10 @@ def add_transaction():
 
         if contra_account.placeholder:
             raise BadRequest(f"{contra_account.fullname} is a placeholder")
+
+        if value < 0:
+            raise BadRequest(f"Value {value} must not be negative")
+        value = sign*value
 
         # TODO: Support accounts with different currencies
         assert account.commodity == contra_account.commodity, (
@@ -184,8 +190,9 @@ def edit_transaction():
     :param guid: GUID of the transaction to be deleted
     :param transaction_date: Date of the transaction
     :param description: Transaction description (not split memo)
-    :param value: Value of the transaction
+    :param value: The amount to be transferred
     :param contra_account_name: Name of the contra account
+    :param sign: The transactions sign: `+1` for deposit, `-1` for withdrawl
     """
     # TODO DRY: This function is very similar to add_transaction
     try:
@@ -195,6 +202,7 @@ def edit_transaction():
         description = request.form["description"]
         value = Decimal(request.form["value"])
         contra_account_name = request.form["contra_account_name"]
+        sign = int(request.form["sign"])
     except (InvalidOperation, ValueError) as e:
         # TODO: Say which parameter the error is about
         raise BadRequest(f"Invalid form parameter: {e}") from e
@@ -216,6 +224,10 @@ def edit_transaction():
 
         if len(transaction.splits) > 2:
             raise BadRequest(f"Can not edit transactions with more than 2 splits.")
+
+        if value < 0:
+            raise BadRequest(f"Value {value} must not be negative")
+        value = sign*value
 
         # TODO: Support accounts with different currencies
         assert account.commodity == contra_account.commodity, (

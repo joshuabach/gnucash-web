@@ -22,7 +22,7 @@
       {# Amount to be transfered #}
       <div class="col-3 ps-0">
         <input class="form-control" form="{{ id }}_transaction"
-               placeholder="Value" name="value" type="number"
+               placeholder="Value" name="value" type="number" min="0"
                step="{{ 1 / account.commodity.fraction }}"
                required>
       </div>
@@ -68,13 +68,38 @@
       </div>
     </div>
 
-    {# Submit button #}
-    {% if submit_btn %}
-      <div class="row">
-        <div class="d-grid">
-          <button class="btn btn-primary btn-sm" form="{{ id }}_transaction" type="submit">Add Transaction</button>
-        </div>
-      </div>
+    {# Submit button and sign input #}
+    <div class="row">
+      <div class="d-grid">
+        {% if submit_btn %}
+          <div class="btn-group" role="group">
+            <button class="btn btn-success btn-sm" form="{{ id }}_transaction" name="sign"
+                    type="submit" value="+1">
+                    Deposit
+            </button>
+            <button class="btn btn-danger btn-sm" form="{{ id }}_transaction" name="sign"
+                    type="submit" value="-1">
+                    Withdraw
+            </button>
+          </div>
+        {% else %}
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="sign" value="+1"
+                   form="{{ id }}_transaction" autocomplete="id"
+                   off="{{ id }}-transaction-sign-deposit">
+            <label class="btn btn-outline-success btn-sm" for="{{ id }}-transaction-sign-deposit">
+              Deposit
+            </label>
+
+            <input type="radio" class="btn-check" name="sign" value="-1"
+                   form="{{ id }}_transaction" autocomplete="off"
+                   id="{{ id }}-transaction-sign-withdraw">
+            <label class="btn btn-outline-danger btn-sm" for="{{ id }}-transaction-sign-withdraw">
+              Withdrawal
+            </label>
+          </div>
     {% endif %}
+      </div>
+    </div>
   </div>
 {%- endmacro %}

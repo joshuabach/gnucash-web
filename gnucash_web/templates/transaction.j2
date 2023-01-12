@@ -61,7 +61,7 @@
                          {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
                   onclick='transaction_recycle(
                                "{{- split.transaction.description -}}",
-                               {{- split.value -}},
+                               {{- split.value | abs -}},
                                {{- split.transaction.post_date -}},
                                "{{- (split|contrasplits|map(attribute='account.fullname')|list)[0] -}}");'>
           </button>
@@ -73,7 +73,8 @@
                   data-bs-target="#edit-transaction"
                   data-bs-transaction-guid="{{ split.transaction.guid }}"
                   data-bs-transaction-description="{{ split.transaction.description }}"
-                  data-bs-transaction-value="{{ split.value }}"
+                  data-bs-transaction-value="{{ split.value|abs }}"
+                  data-bs-transaction-sign="{{ split.value / split.value|abs  }}"
                   data-bs-transaction-post-date="{{ split.transaction.post_date }}"
                   data-bs-transaction-contra-account="{{ (split|contrasplits|map(attribute='account.fullname')|list)[0] }}">
           </button>

@@ -43,6 +43,13 @@ document.addEventListener("DOMContentLoaded", function(){
             // Reset classic form inputs
             document.getElementById('edit_transaction').reset();
 
+            // Reset sign
+            if (button.getAttribute('data-bs-transaction-sign') == "-1") {
+                $("input#edit-transaction-sign-withdraw").attr('checked', true);
+            } else {
+                $("input#edit-transaction-sign-deposit").attr('checked', true);
+            }
+
             // Reset selectize
             $("select[form=edit_transaction][name=contra_account_name]")[0]
                 .selectize.addItem(button.getAttribute('data-bs-transaction-contra-account'));
