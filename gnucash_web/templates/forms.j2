@@ -1,0 +1,80 @@
+{% macro transaction_form(id, account, default_date=None,
+  guid_input=False, submit_btn=True,
+  action='book.add_transaction') -%}
+  
+  {# Transaction form takes same layout as transaction view #}
+  <div class="my-2">
+    <form id="{{ id }}_transaction" action="{{ url_for(action) }}" method="post">
+      <input type="hidden" name="account_name" value="{{ account.fullname }}">
+      {% if guid_input %}
+        <input form="{{ id }}_transaction" type="hidden" name="guid" required>               
+      {% endif %}
+    </form>
+
+    <div class="row align-items-center justify-content-between gap-0">
+      {# Transaction description #}
+      <div class="col-9 pe-0">
+        <input class="form-control" form="{{ id }}_transaction"
+               placeholder="Description" name="description" type="text"
+               required>
+      </div>
+
+      {# Amount to be transfered #}
+      <div class="col-3 ps-0">
+        <input class="form-control" form="{{ id }}_transaction"
+               placeholder="Value" name="value" type="number"
+               step="{{ 1 / account.commodity.fraction }}"
+               required>
+      </div>
+    </div>
+
+    <div class="row align-items-center justify-content-between">
+      {# Date of the transaction #}
+      <div class="col-4 pe-0">
+        <input class="form-control" form="{{ id }}_transaction"
+               name="date" type="date" value="{% if default_date %}{{ default_date.isoformat() }}{% endif %}"
+               required>
+      </div>
+
+      {# Selectable contra accounts are all other account of the same commodity, which are not placeholders #}
+      <div class="col-8 ps-0">
+        <select class="form-select" form="{{ id }}_transaction" name="contra_account_name"
+                id="{{ id }}_transaction-contra_account_name">
+          {% for contra_account in account.book.accounts
+            | rejectattr('fullname', 'eq', account.fullname)
+            | selectattr('commodity', 'eq', account.commodity)
+            | rejectattr('placeholder')
+            | sort(attribute='splits.length,fullname') %}
+            <option value="{{ contra_account.fullname }}" {% if contra_account.fullname == config.PRESELECTED_CONTRA_ACCOUNT %}selected=true{% endif %}>
+              {{- contra_account.fullname | display  -}}
+            </option>
+          {% endfor %}
+        </select>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            $("select#{{ id }}_transaction-contra_account_name").removeClass("form-select");
+            $("select#{{ id }}_transaction-contra_account_name").selectize({
+              maxItems: 1,
+              items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
+              onType: function(text) {
+                // Workaround for https://github.com/selectize/selectize.js/issues/113
+                if (text.length <= 1) {
+                  this.clear();
+                }
+              },
+            });
+          });
+        </script>
+      </div>
+    </div>
+
+    {# Submit button #}
+    {% if submit_btn %}
+      <div class="row">
+        <div class="d-grid">
+          <button class="btn btn-primary btn-sm" form="{{ id }}_transaction" type="submit">Add Transaction</button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{%- endmacro %}

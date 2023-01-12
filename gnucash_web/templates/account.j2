@@ -1,4 +1,5 @@
 {% extends 'base.j2' %}
+  {% from 'forms.j2' import transaction_form %}
 
 {% block title %}{{ account.fullname or 'Accounts' | display }}{% endblock title %}
 
@@ -68,75 +69,7 @@
   {% endif %}
 
   {% if not account.placeholder and account.parent %}
-    {# Transaction form takes same layout as transaction view #}
-    <div id="transaction_form" class="my-2">
-      <form id="add_transaction" action="{{ url_for('book.add_transaction') }}" method="post">
-        <input class="form-control form-control-sm" type="hidden" name="account_name" value="{{ account.fullname }}">
-      </form>
-
-      <div class="row align-items-center justify-content-between gap-0">
-        {# Transaction description #}
-        <div class="col-9 pe-0">
-          <input class="form-control" form="add_transaction"
-                 placeholder="Description" name="description" type="text" id="description"
-                 required>
-        </div>
-
-        {# Amount to be transfered #}
-        <div class="col-3 ps-0">
-          <input class="form-control" form="add_transaction"
-                 placeholder="Value" name="value" type="number"
-                 step="{{ 1 / account.commodity.fraction }}"
-                 required>
-        </div>
-      </div>
-
-      <div class="row align-items-center justify-content-between">
-        {# Date of the transaction (default today #}
-        <div class="col-4 pe-0">
-          <input class="form-control" form="add_transaction"
-                 name="date" type="date" value="{{ today.isoformat() }}"
-                 required>
-        </div>
-
-        {# Selectable contra accounts are all other account of the same commodity, which are not placeholders #}
-        <div class="col-8 ps-0">
-          <select class="form-select" form="add_transaction" name="contra_account_name" id="add_transaction-contra_account_name">
-            {% for contra_account in book.accounts
-              | rejectattr('fullname', 'eq', account.fullname)
-              | selectattr('commodity', 'eq', account.commodity)
-              | rejectattr('placeholder')
-              | sort(attribute='splits.length,fullname') %}
-              <option value="{{ contra_account.fullname }}" {% if contra_account.fullname == config.PRESELECTED_CONTRA_ACCOUNT %}selected=true{% endif %}>
-                {{- contra_account.fullname | display  -}}
-              </option>
-            {% endfor %}
-          </select>
-          <script>
-            document.addEventListener("DOMContentLoaded", function() {
-              $("select#add_transaction-contra_account_name").removeClass("form-select");
-              $("select#add_transaction-contra_account_name").selectize({
-                maxItems: 1,
-                items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
-                onType: function(text) {
-                  // Workaround for https://github.com/selectize/selectize.js/issues/113
-                  if (text.length <= 1) {
-                    this.clear();
-                  }
-                },
-              });
-            });
-          </script>
-        </div>
-      </div>
-
-      {# Submit button #}
-      <div class="row">
-        <div class="d-grid">
-          <button class="btn btn-primary btn-sm" form="add_transaction" type="submit">Add Transaction</button>
-        </div>
-      </div>
-    </div>
+    {{ transaction_form('new', account, default_date=today) }}
 
     <div id="transactions" class="my-2">
       {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num,transaction.enter_date', reverse=True) | slice(num_pages) | nth(page-1) %}
