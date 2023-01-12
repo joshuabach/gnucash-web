@@ -1,7 +1,7 @@
 GnuCash Web
 ===========
 
-*GnuCash Web* is a simple, easy to use, mobile-friendly webinterface for
+*GnuCash Web* is a simple, easy to use, mobile-friendly web interface for
 [GnuCash](https://gnucash.org/) intended for self-hosting. It can access a single
 GnuCash-Database in [sqlite3](https://sqlite.org/index.html),
 [postgres](https://www.postgresql.org/) or [mysql](https://www.mysql.com/de/) (including
@@ -35,14 +35,14 @@ Core Technology Stack
 - [Python](https://www.python.org/)
 - [piecash](https://pypi.org/project/piecash/) for accessing GnuCash database
 - [Flask](https://palletsprojects.com/p/flask/) web framework
-- [Bootstrap](https://getbootstrap.com/) for frontend design
+- [Bootstrap](https://getbootstrap.com/) for front end design
 
 Installation
 ------------
 
 *GnuCash Web* is [available on PyPI](https://pypi.org/project/GnuCash-Web/), so you can
-simply install it via `pip install gnucash_web`. Additionally, you may need to install
-`mysql` or `psycopg2`, depending on which backend you want to use (sqlite backend ist
+simply install it via `pip install GnuCash-Web`. Additionally, you may need to install
+`mysql` or `psycopg2`, depending on which back end you want to use (sqlite back end is
 included in the python standard library).
 
 Note that at least Python 3.8 is required.
@@ -85,7 +85,7 @@ LOG_LEVEL = logging.WARN
 # Supported values: 'sqlite', 'mysql' or 'postgres'
 DB_DRIVER = mysql
 
-# Hostname of the database (ignored for DB_DRIVER = 'sqlite')
+# Host name of the database (ignored for DB_DRIVER = 'sqlite')
 DB_HOST = database.example.org
 
 # Name of the Database on the host (for DB_DRIVER = 'sqlite', this is the 'path/to/db.sqlite')
@@ -100,11 +100,11 @@ TRANSACTION_PAGE_LENGTH = 25
 
 ### Running
 
-It is not recommended to use the builtin Flask webserver in production. *GnuCash Web*
+It is not recommended to use the builtin Flask web server in production. *GnuCash Web*
 comes as a [WSGI](https://wsgi.readthedocs.io/en/latest/) application, so there are [many
 options](https://flask.palletsprojects.com/en/2.0.x/deploying/) available to run it.
 
-Most WSGI Webserver require setting a "module", which is the WSGI object that runs the
+Most WSGI web server require setting a "module", which is the WSGI object that runs the
 app. For *GnuCash Web*, this is `gnucash_web.wsgi:app`.
 
 For example, the following `.ini`-file might be used as a config for
@@ -128,12 +128,12 @@ to create accounts. Therefore, you have to create a database and populate it wit
 account hierarchy before you can use *GnuCash Web*.
 
 Preferably, you will use the official GnuCash desktop app to create a new
-book. Simply select the appropriate database backend in the *Open*-dialog. You can
+book. Simply select the appropriate database back end in the *Open*-dialog. You can
 also migrate an existing GnuCash XML file to a database using *Save as*. More details
 and database considerations can be found in the official [GnuCash
 documentation](https://www.gnucash.org/docs/v4/C/gnucash-guide/basics-files1.html).
 
-Alternativly, you can also use *piecash* to create a new book, as is described in
+Alternatively, you can also use *piecash* to create a new book, as is described in
 their [example
 section](https://piecash.readthedocs.io/en/master/tutorial/examples.html#creating-and-opening-gnucash-files).
 
@@ -142,11 +142,11 @@ section](https://piecash.readthedocs.io/en/master/tutorial/examples.html#creatin
 Currently, there are only two authentication mechanisms supported, `None` and `'passthrough'`.
 
 When using no authentication, anyone can access the web interface and no credentials are
-provided to the database host. This is generally only usefull when using the sqlite
-backend (which does not accept credentials).
+provided to the database host. This is generally only useful when using the sqlite
+back end (which does not accept credentials).
 
-When using passthrough auth, *GnuCash Web* asks for username and password upon login,
-which are provided as credentails for the database hosts. They are also stored in an
+When using pass-through authentication, *GnuCash Web* asks for username and password upon login,
+which are provided as credentials for the database hosts. They are also stored in an
 encrypted session cookie in the users browser. "Logging out" simply deletes the session
 cookie.
 
@@ -212,9 +212,13 @@ There seem to be few other projects in the same direction:
   Wishlist](https://wiki.gnucash.org/wiki/WishList#Use_through_web_browser) lists the
   use through a web browser (as well as an iPhone-App) as "WONTFIX" (discussion from
   2006/2007).
-- In 2016, someone asked about this on
+- In 2016, mikedom722 asked on
   [Reddit](https://www.reddit.com/r/GnuCash/comments/3zlel3/gnucash_web_interface_useful/),
-  with no useful result.
+  whether anyone would be interested in a web interface (stating that he has one),
+  but did not follow up.
+- In the same thread, superman279 presents his app [Remote
+  GnuCash](https://github.com/justinhunt1223/remotegnucash), but the last commit is
+  from 2017 and the website is down.
 - The [GnuCash Wiki](https://wiki.gnucash.org/wiki/GnuCash_and_Mobile_Devices)
   mentions two GnuCash mobile apps, one for iOS and one for Android. The one for
   Android seems to be discontinued (last commit 2020) the one for iOS still has new
@@ -222,19 +226,19 @@ There seem to be few other projects in the same direction:
   GnuCash, rather then writing to the database directly.
 - There is
   [alensiljak/gnucash-portfolio-webui](https://github.com/alensiljak/gnucash-portfolio-webui)
-  on GitHub, but the readme does not cleary state what it does. It seems to be only a
+  on GitHub, but the README does not clearly state what it does. It seems to be only a
   exporter for certain reports. Anyway, it was archived in 2022, with last commit
   from 2018.
 
 To conclude, all projects in this direction seem to be at most prototypes for playing
 around and even those are scarce. The GnuCash dev-team itself doesn't seem to be keen
 on providing a real mobile/web alternative, which is perfectly fine and
-understandable. I probably wouldn't either if I were them. Luckiliy, I am not!
+understandable. I probably wouldn't either if I were them. Luckily, I am not!
 
 License
 -------
 
-Copyright © 2021 Joshua Bachmeier <joshua@bachmeier.cc>
+Copyright © 2022 Joshua Bachmeier <joshua@bachmeier.cc>
 
 This program is free software: you can redistribute it and/or modify it under the terms of
 the GNU General Public License as published by the Free Software Foundation, either
