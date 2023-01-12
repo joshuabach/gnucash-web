@@ -3,7 +3,7 @@
 	url = https://github.com/twbs/bootstrap.git
 [submodule "EncryptedSession"]
 	path = EncryptedSession
-	url = git@github.com:SaintFlipper/EncryptedSession.git
+  url = https://github.com/SaintFlipper/EncryptedSession.git
 [submodule "gnucash"]
 	path = gnucash
 	url = https://github.com/Gnucash/gnucash
