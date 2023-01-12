@@ -85,8 +85,8 @@
         {% else %}
           <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="sign" value="+1"
-                   form="{{ id }}_transaction" autocomplete="id"
-                   off="{{ id }}-transaction-sign-deposit">
+                   form="{{ id }}_transaction" autocomplete="off"
+                   id="{{ id }}-transaction-sign-deposit">
             <label class="btn btn-outline-success btn-sm" for="{{ id }}-transaction-sign-deposit">
               Deposit
             </label>
