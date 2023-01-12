@@ -11,6 +11,8 @@ GnuCash-Database in [sqlite3](https://sqlite.org/index.html),
 Development status should be considered at most *Alpha*, see [below](#Contributing) for
 more information.
 
+Check out the [demo](https://gnucash-web-demo.bachmeier.cc)!
+
 Features
 --------
 
