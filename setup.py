@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='GnuCash Web',
-    version='0.0.1',
+    version='0.1.0',
     author='Joshua Bachmeier',
     author_email='joshua@bachmeier.cc',
     description='A simple, easy to use, mobile-friendly webinterface for GnuCash intended for self-hosting',

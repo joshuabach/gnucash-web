@@ -8,7 +8,7 @@ GnuCash-Database in [sqlite3](https://sqlite.org/index.html),
 [mariadb](https://mariadb.org/)) format using the great
 [piecash](https://pypi.org/project/piecash/) GnuCash library for Python.
 
-Development status should be considered at most *Alpha*, see [below](#Contributing) for
+Development status should be considered at most *Beta*, see [below](#Contributing) for
 more information.
 
 Check out the [demo](https://gnucash-web-demo.bachmeier.cc)!
