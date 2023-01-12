@@ -24,6 +24,32 @@ document.addEventListener("DOMContentLoaded", function(){
         $(this).toggleClass("bi-chevron-up");
         $(this).toggleClass("bi-chevron-down");
     });
+
+    var editTransactionModal = document.getElementById('edit-transaction');
+    editTransactionModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget;
+
+        $("input[form=edit_transaction][name=guid]")
+            .attr("value", button.getAttribute('data-bs-transaction-guid'));
+        $("input[form=edit_transaction][name=description]")
+            .attr("value", button.getAttribute('data-bs-transaction-description'));
+        $("input[form=edit_transaction][name=value]")
+            .attr("value", button.getAttribute('data-bs-transaction-value'));
+        $("input[form=edit_transaction][name=date]")
+            .attr("value", button.getAttribute('data-bs-transaction-post-date'));
+        $("select[form=edit_transaction][name=contra_account_name]")[0]
+            .selectize.addItem(button.getAttribute('data-bs-transaction-contra-account'));
+
+        editTransactionModal.reset = function() {
+            // Reset classic form inputs
+            document.getElementById('edit_transaction').reset();
+
+            // Reset selectize
+            $("select[form=edit_transaction][name=contra_account_name]")[0]
+                .selectize.addItem(button.getAttribute('data-bs-transaction-contra-account'));
+        };
+    });
 });
 
 function transaction_recycle(description, value, postDate, contraAccounts) {

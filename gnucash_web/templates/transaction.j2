@@ -64,7 +64,18 @@
                                                {{- split.transaction.post_date -}},
                                                {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});'>
           </button>
-          <button role="button" class="btn btn-secondary bi bi-pencil disabled"></button>
+
+          <button role="button"
+                  class="btn btn-secondary bi bi-pencil
+                  {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit-transaction"
+                  data-bs-transaction-guid="{{ split.transaction.guid }}"
+                  data-bs-transaction-description="{{ split.transaction.description }}"
+                  data-bs-transaction-value="{{ split.value }}"
+                  data-bs-transaction-post-date="{{ split.transaction.post_date }}"
+                  data-bs-transaction-contra-account="{{ (split|contrasplits|map(attribute='account.fullname')|list)[0] }}">
+          </button>
 
           <button role="button" "type=submit" class="btn btn-danger bi bi-trash"
                   form="del_transaction-{{ split.transaction.guid }}"></button>

@@ -171,6 +171,70 @@ def add_transaction():
         return redirect(account_url(account))
 
 
+@bp.route("/edit_transaction", methods=["POST"])
+@requires_auth
+def edit_transaction():
+    """Edit an existing Transaction.
+
+    All parameters are read from `request.form`.
+
+    Parameters are similar `add_transaction` and `del_transaction`.
+
+    :param account_name: Name of the receiver account
+    :param guid: GUID of the transaction to be deleted
+    :param transaction_date: Date of the transaction
+    :param description: Transaction description (not split memo)
+    :param value: Value of the transaction
+    :param contra_account_name: Name of the contra account
+    """
+    # TODO DRY: This function is very similar to add_transaction
+    try:
+        account_name = request.form["account_name"]
+        guid = request.form["guid"]
+        transaction_date = date.fromisoformat(request.form["date"])
+        description = request.form["description"]
+        value = Decimal(request.form["value"])
+        contra_account_name = request.form["contra_account_name"]
+    except (InvalidOperation, ValueError) as e:
+        # TODO: Say which parameter the error is about
+        raise BadRequest(f"Invalid form parameter: {e}") from e
+
+    with open_book(
+        uri_conn=app.config.DB_URI(*get_db_credentials()),
+        readonly=False,
+        do_backup=False,
+    ) as book:
+        account = get_account(book, fullname=account_name)
+        contra_account = get_account(book, fullname=contra_account_name)
+        transaction = book.transactions.get(guid=guid)
+
+        if account.placeholder:
+            raise BadRequest(f"{account.fullname} is a placeholder")
+
+        if contra_account.placeholder:
+            raise BadRequest(f"{contra_account.fullname} is a placeholder")
+
+        if len(transaction.splits) > 2:
+            raise BadRequest(f"Can not edit transactions with more than 2 splits.")
+
+        # TODO: Support accounts with different currencies
+        assert account.commodity == contra_account.commodity, (
+            f"Incompatible accounts: {account.commodity} != {contra_account.commodity}."
+            "Transaction form in account.j2 should not have allowed this."
+        )
+
+        transaction.description = description
+        transaction.post_date = transaction_date
+        transaction.splits = [
+            Split(account=account, value=value),
+            Split(account=contra_account, value=-value),
+        ]
+
+        book.save()
+
+        return redirect(account_url(account))
+
+
 @bp.route("/del_transaction", methods=["POST"])
 @requires_auth
 def del_transaction():
