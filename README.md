@@ -47,6 +47,14 @@ included in the python standard library).
 
 Note that at least Python 3.8 is required.
 
+You also need to setup a database that stores the GnuCash data, see
+[below](#Initialising Database) for more information. Mind that you will likely need
+to be able to access the database directly from your desktop/notebook with the
+official GnuCash desktop app, since *GnuCash Web* is only a companion and not
+intended to be used on its own. If your database is not publicly accessible, using an
+[SSH Tunnel](https://www.ssh.com/academy/ssh/tunneling) is an easy and secure way to
+access it remotely.
+
 Usage
 -----
 
@@ -112,6 +120,22 @@ http-socket = :8080
 chmod-socket = 660
 vacuum = true
 ```
+
+### Initialising database
+
+*GnuCash Web* only works on a preexisting database. It is also currently not possible
+to create accounts. Therefore, you have to create a database and populate it with an
+account hierarchy before you can use *GnuCash Web*.
+
+Preferably, you will use the official GnuCash desktop app to create a new
+book. Simply select the appropriate database backend in the *Open*-dialog. You can
+also migrate an existing GnuCash XML file to a database using *Save as*. More details
+and database considerations can be found in the official [GnuCash
+documentation](https://www.gnucash.org/docs/v4/C/gnucash-guide/basics-files1.html).
+
+Alternativly, you can also use *piecash* to create a new book, as is described in
+their [example
+section](https://piecash.readthedocs.io/en/master/tutorial/examples.html#creating-and-opening-gnucash-files).
 
 ### Authentication
 
