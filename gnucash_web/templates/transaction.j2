@@ -59,10 +59,11 @@
           <button role="button"
                   class="btn btn-success bi bi-recycle
                          {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
-                  onclick='transaction_recycle("{{- split.transaction.description -}}",
-                                               {{- split.value -}},
-                                               {{- split.transaction.post_date -}},
-                                               {{- split|contrasplits|map(attribute='account.fullname')|list|tojson -}});'>
+                  onclick='transaction_recycle(
+                               "{{- split.transaction.description -}}",
+                               {{- split.value -}},
+                               {{- split.transaction.post_date -}},
+                               "{{- (split|contrasplits|map(attribute='account.fullname')|list)[0] -}}");'>
           </button>
 
           <button role="button"
