@@ -168,6 +168,45 @@ See [Issues](https://github.com/joshuabach/gnucash-web/issues) and
 [Milestones](https://github.com/joshuabach/gnucash-web/milestones) for some ideas on how
 to get started.
 
+Related Work
+------------
+There seem to be few other projects in the same direction:
+
+**TL;DR**: All projects in this direction seem to be at most prototypes for playing
+around and even those are scarce. The GnuCash dev-team itself doesn't seem to be keen
+on providing a real mobile/web alternative, which is perfectly fine and
+understandable. I probably wouldn't either if I were them. Luckiliy, I am not!
+
+- The GnuCash mailing list(s) has a few results
+  - In 2003, [Martin asked about
+    this](https://lists.gnucash.org/pipermail/gnucash-user/2003-July/007243.html) and
+    was recommended to to use SSH+X-Forwarding to access his GnuCash database
+    remotely.
+  - In 2005, [Sachin said](https://lists.gnucash.org/pipermail/gnucash-user/2005-July/014163.html)
+    they are planning to work on a web interface, but I could find no further results.
+  - In 2012, [James
+    posted](https://lists.gnucash.org/pipermail/gnucash-user/2012-March/043762.html)
+    about his project
+    [nylen/gnucash-django](https://github.com/nylen/gnucash-django), but the last
+    commit is from 2015.
+- The [GnuCash Wiki's
+  Wishlist](https://wiki.gnucash.org/wiki/WishList#Use_through_web_browser) lists the
+  use through a web browser (as well as an iPhone-App) as "WONTFIX" (discussion from
+  2006/2007).
+- In 2016, someone asked about this on
+  [Reddit](https://www.reddit.com/r/GnuCash/comments/3zlel3/gnucash_web_interface_useful/),
+  with no useful result.
+- The [GnuCash Wiki](https://wiki.gnucash.org/wiki/GnuCash_and_Mobile_Devices)
+  mentions two GnuCash mobile apps, one for iOS and one for Android. The one for
+  Android seems to be discontinued (last commit 2020) the one for iOS still has new
+  commits in 2022, but its purpose seems to be to export a CSV to be imported in
+  GnuCash, rather then writing to the database directly.
+- There is
+  [alensiljak/gnucash-portfolio-webui](https://github.com/alensiljak/gnucash-portfolio-webui)
+  on GitHub, but the readme does not cleary state what it does. It seems to be only a
+  exporter for certain reports. Anyway, it was archived in 2022, with last commit
+  from 2018.
+
 License
 -------
 
