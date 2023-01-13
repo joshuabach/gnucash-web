@@ -51,7 +51,7 @@ included in the python standard library).
 Note that at least Python 3.8 is required.
 
 You also need to setup a database that stores the GnuCash data, see
-[below](#Initialising Database) for more information. Mind that you will likely need
+[below](#initialising-database) for more information. Mind that you will likely need
 to be able to access the database directly from your desktop/notebook with the
 official GnuCash desktop app, since *GnuCash Web* is only a companion and not
 intended to be used on its own. If your database is not publicly accessible, using an
