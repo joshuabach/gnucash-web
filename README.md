@@ -27,6 +27,7 @@ Key features include:
 - Recycle commonly used transactions
 - Simple single-user authentication
 - Ease of use, especially on mobile
+- CLI to update the price database
 
 | Browse account hierarchy                                                  | View and add transactions                                                    | Edit transactions                                                                    |
 |---------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
@@ -153,7 +154,27 @@ which are provided as credentials for the database hosts. They are also stored i
 encrypted session cookie in the users browser. "Logging out" simply deletes the session
 cookie.
 
+### CLI
 
+The CLI is called `gnucash-web` and is installed with the PyPi package. Currently, the only 
+supported subcommand is `gnucash-web commodities`:
+```sh
+Usage: gnucash-web commodities [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  list           List all used commodities.
+  update_prices  Update prices for all commodities for which it is enabled.
+```
+
+You can [add/edit commodities using the GnuCash desktop
+app](https://www.gnucash.org/docs/v4/C/gnucash-help/tool-security-edit.html). Make sure to 
+enable online quotes updating. Then, `gnucash-web commodities update_prices` will retrieve
+daily closing prices from Yahoo Finance (Quandl for currencies). See also the [piecash
+documentation](https://piecash.readthedocs.io/en/master/api/piecash.core.commodity.html#piecash.core.commodity.Commodity.update_prices)
+of the underlying function.
 
 Development
 -----------
