@@ -16,7 +16,7 @@ setup(
     },
     license='GPLv3+',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Financial and Insurance Industry',
