@@ -75,13 +75,15 @@ The config file is a python script. The following example illustrates possible v
 all available options. This is the normal Flask configuration file, so all [standard
 configuration
 variables](https://flask.palletsprojects.com/en/2.0.x/config/#builtin-configuration-values)
-can also be set.
+can also be set. All options have [default values](gnucash_web/config/default.py), but you 
+should at least set `SECRET_KEY` and `DB_NAME`.
 
 ```python
 import logging
 
 # A 32-bit-key used e.g. to encrypt the session cookie or for other cryptographic operations
-SECRET_KEY = 'devel'
+# Use e.g. `from Crypto.Random import get_random_bytes; print(get_random_bytes(32))`
+SECRET_KEY = 'please use something thats actually safe'
 
 # Python standard library log level
 LOG_LEVEL = logging.WARN
@@ -100,6 +102,9 @@ AUTH_MECHANISM = None
 
 # The maximum number of transactions per page in the ledger
 TRANSACTION_PAGE_LENGTH = 25
+
+# Name of the account to be preselected when creating new transactions (optional)
+PRESELECTED_CONTRA_ACCOUNT = 'Example:Account'
 ```
 
 ### Running
