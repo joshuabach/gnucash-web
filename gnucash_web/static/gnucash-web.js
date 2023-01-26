@@ -57,6 +57,31 @@ document.addEventListener("DOMContentLoaded", function(){
 
         editTransactionModal.reset();
     });
+
+    $("form.needs-validation").submit(function (event) {
+        if (!this.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        // Manually check that selectize has a non-empty item selected
+        var form_id = this.id;
+        function checkSelectizeValidity() {
+            var s = $("form#" + form_id + " .selectize-control");
+            if ($("select[form=" + form_id + "] > option[selected]")[0].value != "") {
+                s.addClass("is-valid");
+                s.removeClass("is-invalid");
+            } else {
+                s.addClass("is-invalid");
+                s.removeClass("is-valid");
+            }
+        }
+
+        $("select[form=" + form_id + "]").change(checkSelectizeValidity);
+        checkSelectizeValidity();
+
+        this.classList.add('was-validated');
+    });
 });
 
 function transaction_recycle(description, value, postDate, contraAccount) {
