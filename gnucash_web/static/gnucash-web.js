@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 function transaction_recycle(description, value, postDate, contraAccount) {
-    $("input[form=new_transaction][name=description]").attr("value", description);
-    $("input[form=new_transaction][name=value]").attr("value", value);
+    $("input[form=new_transaction][name=description]")[0].value = description;
+    $("input[form=new_transaction][name=value]")[0].value = value;
     $("select[form=new_transaction][name=contra_account_name]")[0].selectize.addItem(contraAccount);
 }
