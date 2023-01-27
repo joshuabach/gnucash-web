@@ -83,6 +83,12 @@ document.addEventListener("DOMContentLoaded", function(){
 
         this.classList.add('was-validated');
     });
+
+    // Enable tooltips everywhere
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
 });
 
 function transaction_recycle(description, value, postDate, contraAccount) {

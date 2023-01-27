@@ -55,29 +55,53 @@
         </div>
       </div>
       <div class="col-5 text-end">
+        {% set contra_account = (split|contrasplits|map(attribute='account')|list)[0] %}
         <div class="btn-group pt-2" role="group">
-          <button role="button"
-                  class="btn btn-sm btn-outline-dark bi bi-repeat
-                         {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
-                  onclick='transaction_recycle(
-                               "{{- split.transaction.description -}}",
-                               {{- split.value | abs -}},
-                               {{- split.transaction.post_date -}},
-                               "{{- (split|contrasplits|map(attribute='account.fullname')|list)[0] -}}");'>
-          </button>
+          <div class="d-inline-block tooltip-wrapper" tabindex="0"
+               {% if split.transaction.splits|length > 2 %}
+                 data-bs-toggle="tooltip" data-bs-placement="bottom"
+                 title="Cannot recycle multi-split transaction"
+               {% elif contra_account.commodity != account.commodity %}
+                 data-bs-toggle="tooltip" data-bs-placement="bottom"
+                 title="Cannot recycle currency-converting transaction"
+               {% endif %}>
+            <button role="button"
+                    class="btn btn-sm btn-outline-dark bi bi-repeat
+                           {% if split.transaction.splits|length > 2
+                                 or contra_account.commodity != account.commodity -%}
+                             disabled
+                           {%- endif %}"
+                    onclick='transaction_recycle(
+                                 "{{- split.transaction.description -}}",
+                                 {{- split.value | abs -}},
+                                 {{- split.transaction.post_date -}},
+                                 "{{- (split|contrasplits|map(attribute='account.fullname')|list)[0] -}}");'>
+            </button>
+          </div>
 
-          <button role="button"
-                  class="btn btn-sm btn-outline-dark bi bi-pencil-fill
-                  {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#edit-transaction"
-                  data-bs-transaction-guid="{{ split.transaction.guid }}"
-                  data-bs-transaction-description="{{ split.transaction.description }}"
-                  data-bs-transaction-value="{{ split.value|abs }}"
-                  data-bs-transaction-sign="{{ split.value / split.value|abs  }}"
-                  data-bs-transaction-post-date="{{ split.transaction.post_date }}"
-                  data-bs-transaction-contra-account="{{ (split|contrasplits|map(attribute='account.fullname')|list)[0] }}">
-          </button>
+          <div class="d-inline-block tooltip-wrapper" tabindex="0"
+               {% if split.transaction.splits|length > 2 %}
+                 data-bs-toggle="tooltip" data-bs-placement="bottom"
+                 title="Cannot edit multi-split transaction"
+               {% elif contra_account.commodity != account.commodity %}
+                 data-bs-toggle="tooltip" data-bs-placement="bottom"
+                 title="Cannot edit currency-converting transaction"
+               {% endif %}>
+            <button role="button"
+                    class="btn btn-sm btn-outline-dark bi bi-pencil-fill
+                    {% if split.transaction.splits|length > 2 or contra_account.commodity != account.commodity -%}
+                      disabled
+                    {%- endif %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit-transaction"
+                    data-bs-transaction-guid="{{ split.transaction.guid }}"
+                    data-bs-transaction-description="{{ split.transaction.description }}"
+                    data-bs-transaction-value="{{ split.value|abs }}"
+                    data-bs-transaction-sign="{{ split.value / split.value|abs  }}"
+                    data-bs-transaction-post-date="{{ split.transaction.post_date }}"
+                    data-bs-transaction-contra-account="{{ (split|contrasplits|map(attribute='account.fullname')|list)[0] }}">
+            </button>
+          </div>
 
           <button role="button" "type=submit" class="btn btn-sm btn-outline-dark bi bi-trash-fill"
                   form="del_transaction-{{ split.transaction.guid }}"></button>
