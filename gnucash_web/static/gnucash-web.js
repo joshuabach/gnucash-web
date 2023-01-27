@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function(){
         var form_id = this.id;
         function checkSelectizeValidity() {
             var s = $("form#" + form_id + " .selectize-control");
+            s.addClass("was-validated");
             if ($("select[form=" + form_id + "] > option[selected]")[0].value != "") {
                 s.addClass("is-valid");
                 s.removeClass("is-invalid");

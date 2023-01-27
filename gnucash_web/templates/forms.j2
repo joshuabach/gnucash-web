@@ -10,14 +10,14 @@
         <input form="{{ id }}_transaction" type="hidden" name="guid" required>               
       {% endif %}
 
-      <div class="row align-items-center justify-content-between gap-0">
+      <div class="row align-items-top justify-content-between gap-0">
         {# Transaction description #}
         <div class="col-9 pe-0 position-relative">
           <input class="form-control" form="{{ id }}_transaction"
                  placeholder="Description" name="description" type="text"
                  required>
-          <div class="invalid-tooltip">
-            Mandatory field
+          <div class="invalid-feedback mx-1">
+            Provide a subject for the transaction
           </div>
         </div>
 
@@ -27,21 +27,21 @@
                  placeholder="Value" name="value" type="number" min="0"
                  step="{{ 1 / account.commodity.fraction }}"
                  required>
-          <div class="invalid-tooltip">
-            Amount must not be negative
+          <div class="invalid-feedback mx-1">
+            Provide a non-negative transfer amount
           </div>
         </div>
       </div>
 
-      <div class="row align-items-center justify-content-between">
+      <div class="row align-items-top justify-content-between">
         {# Date of the transaction #}
         <div class="col-4 pe-0 position-relative">
           <input class="form-control" form="{{ id }}_transaction"
                  name="date" type="date"
                  value="{% if default_date %}{{ default_date.isoformat() }}{% endif %}"
                  required>
-          <div class="invalid-tooltip">
-            Must be a valid date in ISO format (YYYY-MM-DD)
+          <div class="invalid-feedback mx-1">
+            Date of the transaction
           </div>
         </div>
 
@@ -61,8 +61,8 @@
               </option>
             {% endfor %}
           </select>
-          <div class="invalid-tooltip">
-            Mandatory field
+          <div class="invalid-feedback mx-1">
+            Select an account to transfer money to / from
           </div>
           <script>
             document.addEventListener("DOMContentLoaded", function() {
