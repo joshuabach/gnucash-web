@@ -1,5 +1,5 @@
 {% extends 'base.j2' %}
-  {% from 'forms.j2' import transaction_form %}
+{% from 'forms.j2' import transaction_form %}
 
 {% block title %}{{ account.fullname or 'Accounts' | display }}{% endblock title %}
 
@@ -23,7 +23,7 @@
 {% endblock account_header %}
 
 {% block content %}
-  <div id="total" class="my-2 list-group">
+  <div id="total" class="my-3 list-group">
     {% if account.parent %}
       <div class="list-group-item">
         <b>Total</b>
@@ -35,7 +35,7 @@
   </div>
 
   {% if account.children %}
-    <div id="subaccounts" class="my-2 list-group">
+    <div id="subaccounts" class="my-3 list-group">
       {# Display all subaccounts in a collapsed tree view #}
       {% for account in account.children | sort(attribute='name') recursive %}
 
@@ -71,7 +71,7 @@
   {% if not account.placeholder and account.parent %}
     {{ transaction_form('new', account, default_date=today) }}
 
-    <div id="transactions" class="my-2">
+    <div id="transactions" class="my-3">
       {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num,transaction.enter_date', reverse=True) | slice(num_pages) | nth(page-1) %}
         <div class="{% if loop.index % 2 %}bg-light{% endif %} border-top {% if loop.last %}border-bottom{% endif %}">
           {% include 'transaction.j2' %}

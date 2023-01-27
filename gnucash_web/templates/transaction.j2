@@ -55,9 +55,9 @@
         </div>
       </div>
       <div class="col-5 text-end">
-        <div class="btn-group pt-1 pe-1" role="group">
+        <div class="btn-group pt-2" role="group">
           <button role="button"
-                  class="btn btn-success bi bi-recycle
+                  class="btn btn-sm btn-outline-dark bi bi-repeat
                          {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
                   onclick='transaction_recycle(
                                "{{- split.transaction.description -}}",
@@ -67,7 +67,7 @@
           </button>
 
           <button role="button"
-                  class="btn btn-warning bi bi-pencil
+                  class="btn btn-sm btn-outline-dark bi bi-pencil-fill
                   {% if split.transaction.splits|length > 2 %}disabled{% endif %}"
                   data-bs-toggle="modal"
                   data-bs-target="#edit-transaction"
@@ -79,7 +79,7 @@
                   data-bs-transaction-contra-account="{{ (split|contrasplits|map(attribute='account.fullname')|list)[0] }}">
           </button>
 
-          <button role="button" "type=submit" class="btn btn-danger bi bi-trash"
+          <button role="button" "type=submit" class="btn btn-sm btn-outline-dark bi bi-trash-fill"
                   form="del_transaction-{{ split.transaction.guid }}"></button>
         </div>
         <form id="del_transaction-{{ split.transaction.guid }}"
