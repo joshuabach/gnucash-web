@@ -130,6 +130,14 @@ chmod-socket = 660
 vacuum = true
 ```
 
+#### Docker
+
+*GnuCash Web* can be run using [Docker](https://www.docker.com/), either using the published 
+[packages](https://github.com/joshuabach/gnucash-web/packages), DockerFile, or using [docker compose](https://docs.docker.com/compose/) 
+with the provided sample `docker-compose.yml` files.
+
+The Docker version runs the [gunicorn](https://gunicorn.org/) WSGI server.
+
 ### Initialising database
 
 *GnuCash Web* only works on a preexisting database. It is also currently not possible
