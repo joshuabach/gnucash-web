@@ -1,0 +1,10 @@
+{% extends 'base.j2' %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+  <form method="POST">
+    <input class="form-control" type="text" id="username" name="username" placeholder="Username">
+    <input class="form-control" type="password" id="password" name="password" placeholder="Password">
+    <br/>
+    <input class="form-control btn btn-primary" type="submit" value="Submit">
+  </form>
+{% endblock content %}

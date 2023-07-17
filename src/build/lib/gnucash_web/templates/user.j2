@@ -1,0 +1,9 @@
+{% extends 'base.j2' %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+  {% if is_authenticated %}
+    Logged in as <strong>{{ username }}</strong>.
+  {% else %}
+    Not logged in.
+  {% endif %}
+{% endblock content %}

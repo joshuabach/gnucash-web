@@ -1,0 +1,18 @@
+{% extends 'base.j2' %}
+{% block title %}Account not found{% endblock title %}
+{% block content %}
+  <div class="text-center fs-3">
+    Account
+    {% for parent_account in account_name | full_account_names -%}
+      {%- if loop.last -%}
+        <span class="text-danger">{{- parent_account.split(':') | last -}}</span>
+      {%- else -%}
+        <a class="link"
+           href="{{ url_for('book.show_account', account_name=parent_account) }}">
+           {{- parent_account.split(':') | last -}}
+        </a>:
+      {%- endif -%}
+    {%- endfor %}
+    not found!
+  </div>
+{% endblock content %}

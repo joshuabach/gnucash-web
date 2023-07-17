@@ -1,0 +1,143 @@
+{% extends 'base.j2' %}
+{% from 'forms.j2' import transaction_form %}
+
+{% block title %}{{ account.fullname or 'Accounts' | display }}{% endblock title %}
+
+{# Account layer navigator in navbar header #}
+{% block account_header %}
+  <div class="breadcrumb gnc-account-nav py-2 my-0 mx-4">
+    {% for parent_account in account | parentaccounts -%}
+      {% if loop.first and loop.last -%}
+        <div class="breadcrumb-item active">All Accounts</div>
+      {%- elif loop.last -%}
+        <div class="breadcrumb-item active">{{ parent_account.name | display }}</div>
+      {%- elif not loop.first -%}
+        <a class="breadcrumb-item link d-inline-block text-truncate"
+           style="max-width: 500px"
+           href="{{ parent_account | accounturl }}">
+          {{ parent_account.name | display }}
+        </a>
+      {%- endif -%}
+    {%- endfor %}
+  </div>
+{% endblock account_header %}
+
+{% block content %}
+  <div id="total" class="my-3 list-group">
+    {% if account.parent %}
+      <div class="list-group-item">
+        <b>Total</b>
+        <span class="float-end">
+          {{ account.get_balance() | money(account.commodity) }}
+        </span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if account.children %}
+    <div id="subaccounts" class="my-3 list-group">
+      {# Display all subaccounts in a collapsed tree view #}
+      {% for account in account.children | sort(attribute='name') recursive %}
+
+        {# Accounts with children are collapsed list group items toggling visibility of the subtree  #}
+        <div class="list-group-item list-group-item-action text-break
+                    {% if account.children %}collapsed bi gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
+             style="overflow: hidden"
+             {% if account.children %}
+               role="button"
+               data-bs-toggle="collapse"
+               data-bs-target="#{{ account.fullname | cssescape }}"
+             {% endif %}>
+
+          <a {% if account.placeholder %}class="link-secondary"{% endif %} href="{{ account | accounturl }}">
+            {{ account.name | display }}
+          </a>
+
+          <span class="float-end">
+            {{ account.get_balance() | money(account.commodity) }}
+          </span>
+        </div>
+
+        {% if account.children %}
+          <div class="list-group-item list-group collapse gnc-account-group"
+               id="{{ account.fullname | cssescape }}">
+               {{ loop(account.children) }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if not account.placeholder and account.parent %}
+    {{ transaction_form('new', account, default_date=today) }}
+
+    <div id="transactions" class="my-3">
+      {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num,transaction.enter_date', reverse=True) | slice(num_pages) | nth(page-1) %}
+        <div class="{% if loop.index % 2 %}bg-light{% endif %} border-top {% if loop.last %}border-bottom{% endif %}">
+          {% include 'transaction.j2' %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div id="pagination">
+      {% if num_pages > 1 %}
+        <nav aria-label="Transaction pages" class="my-2">
+          <ul class="pagination justify-content-center">
+            <li class="page-item {% if page==1 %}disabled{% endif %}">
+              <a class="page-link bi bi-caret-left" href="{{ account | accounturl(page=page-1) }}"></a>
+            </li>
+            {% for p in range(1,num_pages+1) %}
+              {# Display first, previous, current, next and last page explicitly, ellipsise rest. #}
+              {# If a only a single page would be ellipsised, display it anyway. #}
+              {% if page-1 <= p and p <= page+1
+                 or p == page+2 and p+1 == num_pages
+                 or p == page-2 and p-1 == 1
+                 or loop.first or loop.last %}
+                <li class="page-item {% if p==page %}active{% endif %}">
+                  <a class="page-link" {% if p!=page %}href="{{ account | accounturl(page=p) }}"{% endif %}>
+                    {{ p }}
+                  </a>
+                </li>
+                <!--{{ loop.changed(true) }}-->
+              {% elif loop.changed(false) %}
+                {# loop.changed: If page should be ellipsised, only generate dots once per streak #}
+                <li class="page-item disabled">
+                  <a class="page-link bi bi-three-dots"></a>
+                </li>
+              {% endif %}
+
+            {% endfor %}
+            <li class="page-item {% if page==num_pages %}disabled{% endif %}">
+             <a class="page-link bi bi-caret-right" href="{{ account | accounturl(page=page+1) }}"></a>
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock content %}
+
+{% block modals %}
+  <div class="modal fade" id="edit-transaction">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Transaction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          {{ transaction_form('edit', account, default_date=None,
+          guid_input=True, submit_btn=False,
+          action='book.edit_transaction') }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+                  onclick="document.getElementById('edit-transaction').reset()">
+                  Reset
+          </button>
+          <button class="btn btn-primary" form="edit_transaction" type="submit">Save Transaction</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

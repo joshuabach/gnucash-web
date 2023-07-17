@@ -1,0 +1,22 @@
+version: '3.11'
+
+services:
+  app:
+    build: ./
+    environment:
+      SECRET_KEY: '0123456789ABCDEF0123456789ABCDEF'
+
+      LOG_LEVEL: 'WARN'
+
+      DB_DRIVER: 'sqlite'
+      DB_NAME: '/gnucash.sqlite'
+
+      AUTH_MECHANISM:
+
+      TRANSACTION_PAGE_LENGTH: 25
+      PRESELECTED_CONTRA_ACCOUNT:
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./sample/sample.sqlite:/gnucash.sqlite

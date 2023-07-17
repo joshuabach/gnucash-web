@@ -1,6 +1,6 @@
 Flask==2.0.2
 mysql==0.0.3
 piecash==1.2.0
-pycryptodome==3.12.0
+pycryptodome==3.18.0
 babel==2.9.1
 requests==2.27.1

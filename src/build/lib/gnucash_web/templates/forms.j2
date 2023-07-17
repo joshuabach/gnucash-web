@@ -1,0 +1,120 @@
+{% macro transaction_form(id, account, default_date=None,
+  guid_input=False, submit_btn=True,
+  action='book.add_transaction') -%}
+  
+  {# Transaction form takes same layout as transaction view #}
+  <div class="my-2">
+    <form id="{{ id }}_transaction" action="{{ url_for(action) }}" method="post" class="needs-validation" novalidate>
+      <input type="hidden" name="account_name" value="{{ account.fullname }}">
+      {% if guid_input %}
+        <input form="{{ id }}_transaction" type="hidden" name="guid" required>               
+      {% endif %}
+
+      <div class="row align-items-top justify-content-between gap-0">
+        {# Transaction description #}
+        <div class="col-8 col-sm-9 col-md-10 col-xxl-11 pe-0 position-relative">
+          <input class="form-control" form="{{ id }}_transaction"
+                 placeholder="Description" name="description" type="text"
+                 required>
+          <div class="invalid-feedback mx-1">
+            Provide a subject for the transaction
+          </div>
+        </div>
+
+        {# Amount to be transfered #}
+        <div class="col-4 col-sm-3 col-md-2 col-xxl-1 ps-0 position-relative">
+          <input class="form-control" form="{{ id }}_transaction"
+                 placeholder="Value" name="value" type="number" min="0"
+                 step="{{ 1 / account.commodity.fraction }}"
+                 required>
+          <div class="invalid-feedback mx-1">
+            Provide a non-negative transfer amount
+          </div>
+        </div>
+      </div>
+
+      <div class="row align-items-top justify-content-between">
+        {# Date of the transaction #}
+        <div class="col-5 col-sm-4 col-md-3 col-xl-2 pe-0 position-relative">
+          <input class="form-control" form="{{ id }}_transaction"
+                 name="date" type="date"
+                 value="{% if default_date %}{{ default_date.isoformat() }}{% endif %}"
+                 required>
+          <div class="invalid-feedback mx-1">
+            Date of the transaction
+          </div>
+        </div>
+
+        {# Selectable contra accounts are all other accounts of the same commodity, which are not placeholders #}
+        <div class="col-7 col-sm-8 col-md-9 col-xl-10 ps-0 position-relative">
+          <select class="form-select" form="{{ id }}_transaction" name="contra_account_name"
+                  placeholder="Select contra account ..."
+                  id="{{ id }}_transaction-contra_account_name" required>
+            {% for contra_account in account.book.accounts
+              | rejectattr('fullname', 'eq', account.fullname)
+              | selectattr('commodity', 'eq', account.commodity)
+              | rejectattr('placeholder')
+              | sort(attribute='splits.length,fullname') %}
+              <option value="{{ contra_account.fullname }}"
+                      {% if contra_account.fullname == config.PRESELECTED_CONTRA_ACCOUNT %}selected=true{% endif %}>
+                {{- contra_account.fullname | display  -}}
+              </option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback mx-1">
+            Select an account to transfer money to / from
+          </div>
+          <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              $("select#{{ id }}_transaction-contra_account_name").removeClass("form-select");
+              $("select#{{ id }}_transaction-contra_account_name").selectize({
+                maxItems: 1,
+                items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
+                onType: function(text) {
+                  // Workaround for https://github.com/selectize/selectize.js/issues/113
+                  if (text.length <= 1) {
+                    this.clear();
+                  }
+                },
+              });
+            });
+          </script>
+        </div>
+      </div>
+
+      {# Submit button and sign input #}
+      <div class="row">
+        <div class="d-grid">
+          {% if submit_btn %}
+            <div class="btn-group mt-1" role="group">
+              <button class="btn btn-outline-secondary" form="{{ id }}_transaction" name="sign"
+                      type="submit" value="+1">
+                      Deposit
+              </button>
+              <button class="btn btn-outline-danger" form="{{ id }}_transaction" name="sign"
+                      type="submit" value="-1">
+                      Withdraw
+              </button>
+            </div>
+          {% else %}
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check" name="sign" value="+1"
+                     form="{{ id }}_transaction" autocomplete="off"
+                     id="{{ id }}-transaction-sign-deposit">
+              <label class="btn btn-outline-secondary btn-sm" for="{{ id }}-transaction-sign-deposit">
+                Deposit
+              </label>
+
+              <input type="radio" class="btn-check" name="sign" value="-1"
+                     form="{{ id }}_transaction" autocomplete="off"
+                     id="{{ id }}-transaction-sign-withdraw">
+              <label class="btn btn-outline-danger btn-sm" for="{{ id }}-transaction-sign-withdraw">
+                Withdrawal
+              </label>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+{%- endmacro %}

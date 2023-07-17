@@ -1,5 +1,8 @@
 #!python
 from setuptools import setup, find_packages
+from os.path import exists
+
+readme = open('README.md') if exists('README.md') else open('../README.md')
 
 setup(
     name='GnuCash Web',
@@ -7,7 +10,7 @@ setup(
     author='Joshua Bachmeier',
     author_email='joshua@bachmeier.cc',
     description='A simple, easy to use, mobile-friendly webinterface for GnuCash intended for self-hosting',
-    long_description=open('README.md').read(),
+    long_description=readme.read(),
     long_description_content_type='text/markdown; charset=UTF-8; variant=GFM',
     url='https://github.com/joshuabach/gnucash-web',
     project_urls={
@@ -49,15 +52,15 @@ setup(
     python_requires=">=3.8",
 
     install_requires=[
-        'Flask>=2.0.2',
+        'Flask==2.0.2',
         'piecash>=1.2.0',
         'pycryptodome>=3.12.0',
         'babel>=2.9.1',
         'requests>=2.27.1',
     ],
     extras_require={
-        'PostgreSQL backend': 'psycopg2',
-        'MySQL / MariaDB backend': 'mysql',
+        'pgsql': 'psycopg2',
+        'mysql': 'mysql',
     },
 
     entry_points={

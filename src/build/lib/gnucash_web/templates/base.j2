@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="{{ url_for('static', filename='img/official/16x16/apps/gnucash-icon.png') }}" rel="icon" type="image/png">
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='gnucash-web.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='selectize/css/selectize.bootstrap5.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap-icon-font/bootstrap-icons.css') }}" rel="stylesheet">
+
+    <title>{% block title %}{% endblock %} — GnuCash Web</title>
+    {% block head %}{% endblock %}
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+    <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+      <div class="container-fluid">
+        <a href="{{ url_for('index') }}"
+           class="navbar-brand">
+           <img  width="32" height="32" role="img"
+                 src="{{ url_for('static', filename='img/official/32x32/apps/gnucash-icon.png') }}">
+                 <span class="text-dark">GnuCash Web</span>
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-content">
+                <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              {% block account_header %}
+                <a class="nav-link" href="{{ url_for('book.show_account') }}">Accounts</a>
+              {% endblock %}
+            </li>
+          </ul>
+
+          {% if is_authenticated() %}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+              <input type="submit" class="form-control btn btn-outline-primary me-2" value="Logout">
+            </form>
+          {% elif request.path != url_for('auth.login') %}
+            <a class="d-flex" href="{{ url_for('auth.login') }}">
+              <button type="button" class="btn btn-outline-primary me-2">Login</button>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      {% block content required %}{% endblock %}
+    </main>
+
+    <footer class="footer mt-auto bg-light py-2 px-4 mt-7">
+      <div class="float-start">
+        <span class="text-muted">GnuCash Web v{{ pkg_version }} © Joshua Bachmeier (2023), GPLv3+</span>
+      </div>
+      <div class="float-end">
+        <a href="https://github.com/joshuabach/gnucash-web">GitHub</a>
+      </div>
+    </footer>
+
+    {% block modals %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='jquery-3.6.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='gnucash-web.js') }}"></script>
+    <script src="{{ url_for('static', filename='selectize/js/selectize.min.js') }}"></script>
+  </body>
+</html>
+

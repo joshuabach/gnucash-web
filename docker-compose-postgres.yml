@@ -1,0 +1,34 @@
+version: '3.11'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: 'user'
+      POSTGRES_DB: 'gnucash'
+      POSTGRES_PASSWORD: 'example'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  app:
+    build: ./
+    environment:
+      SECRET_KEY: '0123456789ABCDEF0123456789ABCDEF'
+
+      LOG_LEVEL: 'WARN'
+
+      DB_DRIVER: 'postgres'
+      DB_NAME: 'gnucash'
+      DB_HOST: 'db'
+
+      AUTH_MECHANISM: 'passthrough'
+
+      TRANSACTION_PAGE_LENGTH: 25
+      PRESELECTED_CONTRA_ACCOUNT:
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./sample/sample.sqlite:/gnucash.sqlite
+
+volumes:
+  db-data:
