@@ -49,7 +49,7 @@ setup(
     python_requires=">=3.8",
 
     install_requires=[
-        'Flask>=2.0.2',
+        'Flask>=2.0.2,<2.3.0',
         'piecash>=1.2.0',
         'pycryptodome>=3.12.0',
         'babel>=2.9.1',
