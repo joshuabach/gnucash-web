@@ -66,8 +66,8 @@ Usage
 
 ### Configuration
 
-Create a config file in `/etc/gnucash_web/config.py` or in
-`~/.config/gnucash_web/config.py`.  If both files are present, values from the latter
+Create a config file in `/etc/gnucash-web/config.py` or in
+`~/.config/gnucash-web/config.py`.  If both files are present, values from the latter
 override those from the former.  Set the environment variable `GNUCASH_WEB_CONFIG` to load
 a different config file. If set, no other config files are read.
 
