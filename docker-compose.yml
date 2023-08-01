@@ -4,7 +4,7 @@ services:
   app:
     image: ghcr.io/joshuabach/gnucash-web:main
     environment:
-      SECRET_KEY: '0123456789ABCDEF0123456789ABCDEF'
+      SECRET_KEY: '00000000000000000000000000000000'
 
       LOG_LEVEL: 'WARN'
 
