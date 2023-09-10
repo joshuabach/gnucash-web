@@ -71,6 +71,8 @@ Create a config file in `/etc/gnucash_web/config.py` or in
 override those from the former.  Set the environment variable `GNUCASH_WEB_CONFIG` to load
 a different config file. If set, no other config files are read.
 
+Config variables can also be set via environment variables, with the same available options.
+
 The config file is a python script. The following example illustrates possible values for
 all available options. This is the normal Flask configuration file, so all [standard
 configuration
