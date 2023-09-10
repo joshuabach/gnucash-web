@@ -2,7 +2,7 @@
 import logging
 import os
 
-SECRET_KEY = bytes.fromhex(os.getenv('SECRET_KEY', '0000'))
+SECRET_KEY = bytes.fromhex(os.getenv('SECRET_KEY', '00000000'))
 
 LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', 'WARN'))
 
