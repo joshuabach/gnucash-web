@@ -1,0 +1,22 @@
+version: '3.11'
+
+services:
+  app:
+    image: ghcr.io/joshuabach/gnucash-web:main
+    environment:
+      SECRET_KEY: '00000000'
+
+      LOG_LEVEL: 'WARN'
+
+      DB_DRIVER: 'sqlite'
+      DB_NAME: '/gnucash.sqlite'
+
+      AUTH_MECHANISM:
+
+      TRANSACTION_PAGE_LENGTH: 25
+      PRESELECTED_CONTRA_ACCOUNT:
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./sample/sample.sqlite:/gnucash.sqlite

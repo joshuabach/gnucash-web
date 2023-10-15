@@ -71,6 +71,8 @@ Create a config file in `/etc/gnucash_web/config.py` or in
 override those from the former.  Set the environment variable `GNUCASH_WEB_CONFIG` to load
 a different config file. If set, no other config files are read.
 
+Config variables can also be set via environment variables, with the same available options.
+
 The config file is a python script. The following example illustrates possible values for
 all available options. This is the normal Flask configuration file, so all [standard
 configuration
@@ -129,6 +131,28 @@ http-socket = :8080
 chmod-socket = 660
 vacuum = true
 ```
+
+#### Docker
+
+*GnuCash Web* can be run using [Docker](https://www.docker.com/), either using the published 
+[packages](https://github.com/joshuabach/gnucash-web/packages), DockerFile, or using [docker compose](https://docs.docker.com/compose/) 
+with the provided sample `docker-compose.yml` files. This uses a simple SQLite backend, 
+though if you want to use a dedicated database backend then `docker-compose-postgres.yml`
+is also provided, running [PostgreSQL](https://www.postgresql.org/) as the name implies.
+
+In either case, configuration is done via environment variables in the compose file instead
+of the default configuration file. The same options are available.
+
+If you're running a dedicated backend as part of docker compose, then in order to 
+[initialise the database](#initialising-database) you'll need to 
+[expose the respective ports](https://docs.docker.com/compose/networking/).
+Keep security in mind when exposing ports, such as using a strong password,
+as exposing ports may grant any user on the internet access to your database.
+
+If you want to quickly spin up and test gnucash-web, then a sample GnuCash database is 
+[provided](sample/sample.sqlite) for the SQLite version.
+
+The Docker version runs the [gunicorn](https://gunicorn.org/) WSGI server.
 
 ### Initialising database
 

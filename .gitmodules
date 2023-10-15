@@ -1,15 +1,15 @@
-[submodule "bootstrap"]
-	path = bootstrap
+[submodule "src/bootstrap"]
+	path = src/bootstrap
 	url = https://github.com/twbs/bootstrap.git
-[submodule "EncryptedSession"]
-	path = EncryptedSession
-  url = https://github.com/SaintFlipper/EncryptedSession.git
-[submodule "gnucash"]
-	path = gnucash
+[submodule "src/EncryptedSession"]
+	path = src/EncryptedSession
+	url = https://github.com/SaintFlipper/EncryptedSession.git
+[submodule "src/gnucash"]
+	path = src/gnucash
 	url = https://github.com/Gnucash/gnucash
-[submodule "selectize"]
-	path = selectize
+[submodule "src/selectize"]
+	path = src/selectize
 	url = https://github.com/selectize/selectize.js.git
-[submodule "bootstrap-icons"]
-	path = bootstrap-icons
+[submodule "src/bootstrap-icons"]
+	path = src/bootstrap-icons
 	url = https://github.com/twbs/icons.git
