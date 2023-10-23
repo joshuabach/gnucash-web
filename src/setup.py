@@ -49,7 +49,8 @@ setup(
     },
 
     # Because of datetime.date.fromisoformat (3.7) and importlib.metadata (3.8)
-    python_requires=">=3.8",
+    # Piecash requires <3.12 until e9faaa3 is included in release over there
+    python_requires=">=3.8,<3.12",
 
     install_requires=[
         'Flask==2.0.2',
