@@ -1,7 +1,7 @@
 #!python
 from setuptools import setup, find_packages
 from os.path import exists
-from . import __version__
+from gnucash_web import __version__
 
 readme = open('README.md') if exists('README.md') else open('../README.md')
 
