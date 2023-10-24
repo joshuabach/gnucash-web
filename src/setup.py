@@ -52,8 +52,11 @@ setup(
     # Piecash requires <3.12 until e9faaa3 is included in release over there
     python_requires=">=3.8,<3.12",
 
+    # Flask <2.3 is required for encrypted_session, see #41
+    # Werkzeug <3.0.0 is required for Flask, see https://stackoverflow.com/a/77214086
     install_requires=[
         'Flask>=2.0.2,<2.3.0',
+        'Werkzeug<3.0.0',
         'piecash>=1.2.0',
         'pycryptodome>=3.12.0',
         'babel>=2.9.1',

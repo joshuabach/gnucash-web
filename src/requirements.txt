@@ -1,6 +1,9 @@
-Flask==2.0.2
+Babel==2.9.1
+Flask==2.2.5
 mysql==0.0.3
+mysqlclient==2.2.0
 piecash==1.2.0
+psycopg2==2.9.9
 pycryptodome==3.18.0
-babel==2.9.1
 requests==2.27.1
+Werkzeug==2.3.7
