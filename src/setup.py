@@ -1,12 +1,13 @@
 #!python
 from setuptools import setup, find_packages
 from os.path import exists
+from . import __version__
 
 readme = open('README.md') if exists('README.md') else open('../README.md')
 
 setup(
     name='GnuCash Web',
-    version='0.1.0',
+    version=__version__.VERSION,
     author='Joshua Bachmeier',
     author_email='joshua@bachmeier.cc',
     description='A simple, easy to use, mobile-friendly webinterface for GnuCash intended for self-hosting',
