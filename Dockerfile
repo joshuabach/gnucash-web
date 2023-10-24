@@ -1,4 +1,4 @@
-FROM python:alpine AS builder
+FROM python:3.11-alpine AS builder
 LABEL authors="freddo"
 
 WORKDIR /srv/
@@ -12,7 +12,7 @@ RUN apk add \
 
 RUN pip wheel --no-cache-dir --wheel-dir /wheels mysql pycryptodome psycopg2
 
-FROM python:alpine
+FROM python:3.11-alpine
 
 WORKDIR /srv/
 
