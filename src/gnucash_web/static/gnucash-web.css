@@ -88,3 +88,27 @@ a {
     margin-left: calc(var(--bs-border-width) * -1);
     border-radius: 0 var(--bs-btn-border-radius) var(--bs-btn-border-radius) 0;
 }
+
+.selectize-input {
+    border: 1px solid var(--bs-body-color)!important;
+    color: var(--bs-body-color)!important;
+}
+
+.selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: var(--bs-bg-color)!important;
+}
+
+.selectize-dropdown, .selectize-dropdown-content {
+    background: var(--bs-body-bg)!important;
+    color: var(--bs-body-color)!important;
+}
+
+.selectize-dropdown, .selectize-dropdown-content .option:hover {
+    background: var(--bs-link-hover-color)!important;
+    color: var(--bs-light-text)!important;
+}
+
+.selectize-dropdown, .selectize-dropdown-content .option:active {
+    background: var(--bs-link-color)!important;
+    color: var(--bs-dark-text)!important;
+}

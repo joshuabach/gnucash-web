@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-1 text-center">
-    <i class="btn gnc-transaction-detail-button bi bi-chevron-down"
+    <i class="btn-muted gnc-transaction-detail-button bi bi-chevron-down"
             role="button"
             data-bs-toggle="collapse" data-bs-target="#transaction-details-{{ loop.index }}"
             data-gnc-switch=".gnc-transaction-general-{{ loop.index }}">
@@ -122,7 +122,7 @@
     {% set outer_loop_index = loop.index %}
     <ul class="list-group list-group-flush">
       {% for other_split in split.transaction.splits %}
-        <li class="list-group-item {% if outer_loop_index % 2 %}bg-light{% endif %}">
+        <li class="list-group-item {% if outer_loop_index % 2 %}{% endif %}">
           <div class="row justify-content-center">
             <div class="col-9 text-break {% if split == other_split %}fw-bolder{% endif %}">
               {# Display account name, line-breakable /preferred/ at the colons #}
