@@ -37,6 +37,9 @@
                 <a class="nav-link" href="{{ url_for('book.show_account') }}">Accounts</a>
               {% endblock %}
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('budget.list_budgets') }}">Budgets</a>
+            </li>
           </ul>
 
           {% if is_authenticated() %}

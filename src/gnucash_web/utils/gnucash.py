@@ -93,3 +93,20 @@ def get_account(book, *args, **kwargs):
         return book.accounts.get(*args, **kwargs)
     except KeyError:
         raise AccountNotFound(*args, **kwargs)
+
+
+def get_budgets(book, *args, **kwargs):
+    """
+    """
+    try:
+        return book.get(piecash.Budget)
+    except Exception:
+        return ""
+    
+def get_budget(book, *args, **kwargs):
+    """
+    """
+    try:
+        return book.get(piecash.Budget, *args, **kwargs)
+    except Exception:
+        return ""
