@@ -23,16 +23,16 @@
 {% endblock account_header %}
 
 {% block content %}
-  <div id="total" class="my-3 list-group">
-    {% if account.parent %}
+  {% if account.parent %}
+    <div id="total" class="my-3 list-group">
       <div class="list-group-item">
         <b>Total</b>
         <span class="float-end">
           {{ account.get_balance() | money(account.commodity) }}
         </span>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   {% if account.children %}
     <div id="subaccounts" class="my-3 list-group">
@@ -118,26 +118,28 @@
 {% endblock content %}
 
 {% block modals %}
-  <div class="modal fade" id="edit-transaction">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Transaction</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          {{ transaction_form('edit', account, default_date=None,
-          guid_input=True, submit_btn=False,
-          action='book.edit_transaction') }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary"
-                  onclick="document.getElementById('edit-transaction').reset()">
-                  Reset
-          </button>
-          <button class="btn btn-primary" form="edit_transaction" type="submit">Save Transaction</button>
+  {% if not account.placeholder and account.parent %}
+    <div class="modal fade" id="edit-transaction">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Transaction</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            {{ transaction_form('edit', account, default_date=None,
+            guid_input=True, submit_btn=False,
+            action='book.edit_transaction') }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+                    onclick="document.getElementById('edit-transaction').reset()">
+                    Reset
+            </button>
+            <button class="btn btn-primary" form="edit_transaction" type="submit">Save Transaction</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}
