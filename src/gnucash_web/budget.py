@@ -13,7 +13,7 @@ import numpy as np
 from datetime import datetime
 
 from .auth import requires_auth, get_db_credentials
-from .utils.gnucash import open_book, get_account, get_budgets, get_budget, AccountNotFound, DatabaseLocked
+from .utils.gnucash import open_book, get_account, get_budget, AccountNotFound, DatabaseLocked
 from .utils.jinja import account_url
 
 
@@ -29,7 +29,7 @@ def list_budgets():
             open_if_lock=True,
             readonly=True,
         ) as book:
-            budgetsInBook = get_budgets(book)
+            budgetsInBook = get_budget(book)
 
             return render_template('budgets.html', budgets=budgetsInBook)
 

@@ -94,17 +94,17 @@ def get_account(book, *args, **kwargs):
     except KeyError:
         raise AccountNotFound(*args, **kwargs)
 
-
-def get_budgets(book, *args, **kwargs):
-    """
-    """
-    try:
-        return book.get(piecash.Budget)
-    except Exception:
-        return ""
-    
+ 
 def get_budget(book, *args, **kwargs):
     """
+    Get a budget in the book based on given filters. If no `name` is passed, a 
+    list of budgets will be returned instead
+
+    Wraps around `piecash.core.book.Book.get`. All parameters are passed to
+    that function.
+
+    :param book: The book containing the account.
+    :returns:
     """
     try:
         return book.get(piecash.Budget, *args, **kwargs)
