@@ -1,4 +1,4 @@
-{% extends 'base.j2' %}
+{% extends 'base.html' %}
 {% block title %}Budgets{% endblock title %}
 {% block account_header %}
     <div class="breadcrumb gnc-account-nav py-2 my-0 mx-4">
@@ -6,7 +6,9 @@
     </div>
 {% endblock %}
 {% block content %}
-    <table class="table table-striped">
+<div class="card">
+    <div class="table-responsive">
+      <table class="table table-vcenter card-table table-striped">
         <thead>
             <tr>
                 <th scope="col">GUID</th>
@@ -17,14 +19,15 @@
         </thead>
         <tbody>
             {% for budget in budgets %}
-                <tr>
-                    <td>{{budget.guid}}</td>
-                    <td><a href="{{ url_for('budget.show_budget', budget_name=budget.name) }}">{{budget.name}}</a></td>
-                    <td>{{budget.description}}</td>
-                    <td>{{budget.num_periods}}</td>
-                </tr>
-            {% endfor %}
+            <tr>
+                <td>{{budget.guid}}</td>
+                <td><a href="{{ url_for('budget.show_budget', budget_name=budget.name) }}">{{budget.name}}</a></td>
+                <td>{{budget.description}}</td>
+                <td>{{budget.num_periods}}</td>
+            </tr>
+        {% endfor %}
         </tbody>
-        
-    </table>
+      </table>
+    </div>
+  </div>
 {% endblock %}

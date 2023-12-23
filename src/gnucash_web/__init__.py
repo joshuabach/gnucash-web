@@ -55,6 +55,8 @@ def create_app(test_config=None):
     app.jinja_env.filters['contrasplits'] = jinja_utils.contra_splits
     app.jinja_env.filters['nth'] = jinja_utils.nth
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
+    app.jinja_env.filters['flip_sign'] = jinja_utils.flip_sign
+    app.jinja_env.filters['currency'] = jinja_utils.currency 
     app.config['IPYTHON_CONFIG'] = {
     'InteractiveShell': {
         'colors': 'Linux',

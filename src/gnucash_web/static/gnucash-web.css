@@ -112,3 +112,23 @@ a {
     background: var(--bs-link-color)!important;
     color: var(--bs-dark-text)!important;
 }
+
+/* Adjust this style according to your layout */
+.accordion-button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Ensures button takes up full width */
+}
+
+.accordion-button:after {
+ margin-left: 1em;
+}
+
+.button-content {
+    display: flex;
+    align-items: center;
+}
+
+.right-content {
+    margin-left: auto; /* To align right-content at the end */
+}

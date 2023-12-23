@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="{{ url_for('static', filename='img/official/16x16/apps/gnucash-icon.png') }}" rel="icon" type="image/png">
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <link href="{{ url_for('static', filename='gnucash-web.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='selectize/css/selectize.bootstrap5.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='bootstrap-icon-font/bootstrap-icons.css') }}" rel="stylesheet">
@@ -14,7 +14,7 @@
     {% block head %}{% endblock %}
   </head>
 
-  <body class="d-flex flex-column min-vh-100">
+  <body class="d-flex flex-column min-vh-100 theme-dark-auto">
     <nav id="navbar" class="navbar navbar-expand-md fixed-top">
       <div class="container-fluid">
         <a href="{{ url_for('index') }}"
@@ -59,7 +59,7 @@
       {% block content required %}{% endblock %}
     </main>
 
-    <footer class="footer mt-auto py-2 px-4 mt-7">
+    <footer class="footer footer-transparent mt-auto py-2 px-4 mt-7">
       <div class="float-start">
         <span class="text-muted">GnuCash Web v{{ pkg_version }} © Joshua Bachmeier (2023), GPLv3+</span>
       </div>
@@ -71,7 +71,7 @@
     {% block modals %}{% endblock %}
 
     <script src="{{ url_for('static', filename='jquery-3.6.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
     <script src="{{ url_for('static', filename='gnucash-web.js') }}"></script>
     <script src="{{ url_for('static', filename='selectize/js/selectize.min.js') }}"></script>
     <script>

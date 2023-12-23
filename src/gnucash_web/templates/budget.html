@@ -1,4 +1,4 @@
-{% extends 'base.j2' %}
+{% extends 'base.html' %}
 {% block title %}Budget {{ budgetData.name }}{% endblock title %}
 {% block account_header %}
     <div class="breadcrumb gnc-account-nav py-2 my-0 mx-4">
@@ -6,60 +6,63 @@
     </div>
 {% endblock %}
 {% block content %}
-    <div class="bg border-top ">
-        {% for period, _period in _periods %}
-            <div class="row">
-                <div class="col-1 text-center">
-                    <i class="btn-muted gnc-transaction-detail-button bi collapsed bi-chevron-down" role="button" data-bs-toggle="collapse" data-bs-target="#budget_period_{{ _period }}" data-gnc-switch=".gnc-budget-period-{{ _period }}" aria-expanded="false">
-                    </i>
-                </div>
-                <div class="col-11 gnc-budget-period-{{ _period }}">
-    
-                    <div class="row align-items-center justify-content-between">
-                      <div class="col-9 fw-bolder">{{ period }}</div>
-                      <div class="col-3 text-end">
-                        <span class="float-end fs-7">                  
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+<div class="row row-cards">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                Budget Total
             </div>
-            <div class="row collapse" id="budget_period_{{ _period }}" style="">
-                <div class="col">
-                    <div class="row">
-                        <div class="col fw-bolder">{{ period }}</div>
-                      </div>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Account</th>
-                                <th scope="col">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for key, value in budgetFrame.iterrows() %}
-                                {% if period == value['period'] %}
-                                    {% if value['amount'] > 0 %}
-                                        <tr>
-                                            <td>{{value['account']}}</td>
-                                            <td>{{ "${:,.2f}".format(value['amount'])  }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-              </div>
-        {% endfor %}
-    </div>
+        </div>
+        <div class="card-body">
+            {% if budgetFrame['amount'].sum() > 0 %} Loss of {% else %} Surplus of {% endif %} {{ budgetFrame['amount'].sum() | abs | currency }}    
+        </div>
+      </div>  
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                Budget Details
+            </div>
+        </div>
+        <div class="card-body">
+          <div class="accordion" id="accordion-example">
+                {% for period, _period in _periods %}
+                    <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ _period }}" aria-expanded="false">
+                            <span class="left-content">{{ period }}</span>
+                        <span class="right-content">{{ (budgetFrame[budgetFrame['period'] == period]['amount'].sum() | flip_sign | currency ) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ _period }}" class="accordion-collapse collapse" data-bs-parent="#accordion-example">
+                        <div class="accordion-body pt-0">
+                            <table class="table table-vcenter card-table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Account</th>
+                                        <th scope="col">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in budgetFrame.iterrows() %}
+                                        {% if period == value['period'] %}
+                                            {% if value['amount'] > 0 or value['amount'] < 0 %}
+                                                <tr>
+                                                    <td>{{ value['account'] }}</td>
+                                                    <td>{{ value['amount'] | flip_sign | currency  }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+      </div>
+</div>
 
-
-
-
-
-    
-        
-    
-    
+  
 {% endblock %}
