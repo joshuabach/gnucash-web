@@ -7,3 +7,4 @@ psycopg2==2.9.9
 pycryptodome==3.18.0
 requests==2.27.1
 Werkzeug==2.3.7
+pytest==7.4.3
