@@ -34,40 +34,43 @@
     {% endif %}
   </div>
 
+
   {% if account.children %}
-    <div id="subaccounts" class="my-3 list-group">
-      {# Display all subaccounts in a collapsed tree view #}
+    <!-- All accounts accordian -->
+    <div class="accordion" id="accordion-accounts">
       {% for account in account.children | sort(attribute='name') recursive %}
-
-        {# Accounts with children are collapsed list group items toggling visibility of the subtree  #}
-        <div class="list-group-item list-group-item-action text-break
-                    {% if account.children %}collapsed bi gnc-superaccount{% else %}gnc-leafaccount{% endif %}"
-             style="overflow: hidden"
-             {% if account.children %}
-               role="button"
-               data-bs-toggle="collapse"
-               data-bs-target="#{{ account.fullname | cssescape }}"
-             {% endif %}>
-
-          <a {% if account.placeholder %}class="link-secondary"{% endif %} href="{{ account | accounturl }}">
-            {{ account.name | display }}
-          </a>
-
-          <span class="float-end">
-            {{ account.get_balance() | money(account.commodity) }}
-          </span>
+        <!-- For every account we should add a new Accordian Item -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-1">
+            {% if account.children %}
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ account.name | cssescape }}" aria-expanded="false">
+                <span class="left-content">{{ account.name | display }}</span>
+                <span class="right-content">{{ account.get_balance() | money(account.commodity) }}</span>
+              </button> 
+            {% else %}
+              <a href="{{ account | accounturl }}" class="accordion-button no-btn collapsed">
+                <span class="left-content">{{ account.name | display }}</span>
+                <span class="right-content">{{ account.get_balance() | money(account.commodity) }}</span>
+              </a>
+            {% endif %}
+          </h2>
         </div>
-
+        <!-- The Body of the Accordian is only added if the account show has children -->
         {% if account.children %}
-          <div class="list-group-item list-group collapse gnc-account-group"
-               id="{{ account.fullname | cssescape }}">
-               {{ loop(account.children) }}
+          <!-- Add an accordian body to hold a new accordian for the sub accounts -->
+          <div id="collapse-{{ account.name | cssescape }}" class="accordion-collapse collapse" >
+            <div class="accordion-body pt-0">
+              <!-- This is where the new accordian should go -->
+              <div class="accordion" id="accordion-{{ account.name | cssescape }}-children">
+                {{ loop(account.children) }}
+              </div>
+            </div>
           </div>
         {% endif %}
       {% endfor %}
     </div>
   {% endif %}
-
+  
   {% if not account.placeholder and account.parent %}
     {{ transaction_form('new', account, default_date=today) }}
 
@@ -118,8 +121,8 @@
 {% endblock content %}
 
 {% block modals %}
-  <div class="modal fade" id="edit-transaction">
-    <div class="modal-dialog">
+  <div class="modal modal-blur" id="edit-transaction">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Edit Transaction</h5>

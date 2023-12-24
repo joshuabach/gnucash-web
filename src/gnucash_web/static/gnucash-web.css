@@ -132,3 +132,7 @@ a {
 .right-content {
     margin-left: auto; /* To align right-content at the end */
 }
+
+.no-btn:after {
+    visibility: hidden;
+}

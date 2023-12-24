@@ -66,7 +66,7 @@
                  title="Cannot recycle currency-converting transaction"
                {% endif %}>
             <button role="button"
-                    class="btn btn-sm btn-outline-dark bi bi-repeat
+                    class="btn btn-sm btn-outline bi bi-repeat
                            {% if split.transaction.splits|length > 2
                                  or contra_account.commodity != account.commodity -%}
                              disabled
@@ -88,7 +88,7 @@
                  title="Cannot edit currency-converting transaction"
                {% endif %}>
             <button role="button"
-                    class="btn btn-sm btn-outline-dark bi bi-pencil-fill
+                    class="btn btn-sm btn-outline bi bi-pencil-fill
                     {% if split.transaction.splits|length > 2 or contra_account.commodity != account.commodity -%}
                       disabled
                     {%- endif %}"
@@ -103,7 +103,7 @@
             </button>
           </div>
 
-          <button role="button" "type=submit" class="btn btn-sm btn-outline-dark bi bi-trash-fill"
+          <button role="button" "type=submit" class="btn btn-sm btn-outline bi bi-trash-fill"
                   form="del_transaction-{{ split.transaction.guid }}"></button>
         </div>
         <form id="del_transaction-{{ split.transaction.guid }}"
