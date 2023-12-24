@@ -74,7 +74,7 @@
     <div id="transactions" class="my-3">
       {% for split in account.splits | sort(attribute='transaction.post_date,transaction.num,transaction.enter_date', reverse=True) | slice(num_pages) | nth(page-1) %}
         <div class="{% if loop.index % 2 %}{% endif %} border-top {% if loop.last %}border-bottom{% endif %}">
-          {% include 'transactionhtml' %}
+          {% include 'transaction.html' %}
         </div>
       {% endfor %}
     </div>
