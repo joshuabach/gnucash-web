@@ -24,7 +24,7 @@ def handle_account_not_found(e: AccountNotFound):
     :returns: Rendered HTTP Response
 
     """
-    body = render_template("error_account_not_found.j2", account_name=e.account_name)
+    body = render_template("error_account_not_found.html", account_name=e.account_name)
     return body, e.code
 
 
@@ -44,7 +44,7 @@ def handle_database_locked(e: DatabaseLocked):
     url = f"{request.url}?{urlencode(query)}"
 
     body = render_template(
-        "error_database_locked.j2",
+        "error_database_locked.html",
         ignore_lock_url=url,
     )
     return body, e.code
@@ -92,7 +92,7 @@ def show_account(account_name):
             raise BadRequest(f'Invalid query parameter: not enough pages: {page} > {num_pages}')
 
         return render_template(
-            "account.j2",
+            "account.html",
             account=account,
             book=book,
             today=date.today(),
@@ -153,7 +153,7 @@ def add_transaction():
         # TODO: Support accounts with different currencies
         assert account.commodity == contra_account.commodity, (
             f"Incompatible accounts: {account.commodity} != {contra_account.commodity}."
-            "Transaction form in account.j2 should not have allowed this."
+            "Transaction form in account.html should not have allowed this."
         )
 
         common_currency = account.commodity
@@ -232,7 +232,7 @@ def edit_transaction():
         # TODO: Support accounts with different currencies
         assert account.commodity == contra_account.commodity, (
             f"Incompatible accounts: {account.commodity} != {contra_account.commodity}."
-            "Transaction form in account.j2 should not have allowed this."
+            "Transaction form in account.html should not have allowed this."
         )
 
         transaction.description = description

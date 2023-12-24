@@ -38,7 +38,7 @@ setup(
     packages=find_packages(),
     package_data={
         'gnucash_web': [
-            'templates/*.j2',
+            'templates/*.html',
             'static/*.js', 'static/*.css',
             'static/bootstrap/css/*.min.css',
             'static/bootstrap/js/*.min.js',

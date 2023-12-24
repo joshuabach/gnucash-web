@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Budgets{% endblock title %}
+{% block account_header %}
+    <div class="breadcrumb gnc-account-nav py-2 my-0 mx-4">
+        <div class="breadcrumb-item active">All Budgets</div>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="table-responsive">
+      <table class="table table-vcenter card-table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">GUID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Periods</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for budget in budgets %}
+            <tr>
+                <td>{{budget.guid}}</td>
+                <td><a href="{{ url_for('budget.show_budget', budget_name=budget.name) }}">{{budget.name}}</a></td>
+                <td>{{budget.description}}</td>
+                <td>{{budget.num_periods}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

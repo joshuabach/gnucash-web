@@ -6,7 +6,7 @@ from flask import Flask, redirect, url_for
 from flask.cli import FlaskGroup
 import click
 
-from . import auth, book, commodities
+from . import auth, book, commodities, budget
 from .utils import jinja as jinja_utils
 from .config import GnuCashWebConfig
 
@@ -55,6 +55,14 @@ def create_app(test_config=None):
     app.jinja_env.filters['contrasplits'] = jinja_utils.contra_splits
     app.jinja_env.filters['nth'] = jinja_utils.nth
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
+    app.jinja_env.filters['flip_sign'] = jinja_utils.flip_sign
+    app.jinja_env.filters['currency'] = jinja_utils.currency 
+    app.config['IPYTHON_CONFIG'] = {
+    'InteractiveShell': {
+        'colors': 'Linux',
+        'confirm_exit': False,
+    },
+}
 
     with open('gnucash_web/version.txt') as version:
         app.jinja_env.globals['pkg_version'] = version.read().strip()
@@ -62,6 +70,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.register_blueprint(book.bp)
     app.register_blueprint(commodities.bp)
+    app.register_blueprint(budget.bp)
 
     @app.route('/')
     def index():

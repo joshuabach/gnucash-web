@@ -132,3 +132,9 @@ def contra_splits(split):
 def nth(iterable, n, default=None):
     "Returns the nth item or a default value"
     return next(islice(iterable, n, None), default)
+
+def flip_sign(number):
+    return number * -1
+
+def currency(value, currency='USD', locale='en_US'):
+   return numbers.format_currency(value, currency, locale=locale)

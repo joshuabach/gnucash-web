@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="auto" >
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="{{ url_for('static', filename='img/official/16x16/apps/gnucash-icon.png') }}" rel="icon" type="image/png">
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <link href="{{ url_for('static', filename='gnucash-web.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='selectize/css/selectize.bootstrap5.css') }}" rel="stylesheet">
+    <!-- <link href="{{ url_for('static', filename='selectize/css/selectize.bootstrap5.css') }}" rel="stylesheet"> -->
     <link href="{{ url_for('static', filename='bootstrap-icon-font/bootstrap-icons.css') }}" rel="stylesheet">
 
     <title>{% block title %}{% endblock %} — GnuCash Web</title>
     {% block head %}{% endblock %}
   </head>
 
-  <body class="d-flex flex-column min-vh-100">
-    <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+  <body class="d-flex flex-column min-vh-100 theme-dark-auto">
+    <nav id="navbar" class="navbar navbar-expand-md fixed-top">
       <div class="container-fluid">
         <a href="{{ url_for('index') }}"
            class="navbar-brand">
            <img  width="32" height="32" role="img"
                  src="{{ url_for('static', filename='img/official/32x32/apps/gnucash-icon.png') }}">
-                 <span class="text-dark">GnuCash Web</span>
+                 <span class="text">GnuCash Web</span>
         </a>
         <button class="navbar-toggler"
                 type="button"
@@ -36,6 +36,9 @@
               {% block account_header %}
                 <a class="nav-link" href="{{ url_for('book.show_account') }}">Accounts</a>
               {% endblock %}
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('budget.list_budgets') }}">Budgets</a>
             </li>
           </ul>
 
@@ -56,7 +59,7 @@
       {% block content required %}{% endblock %}
     </main>
 
-    <footer class="footer mt-auto bg-light py-2 px-4 mt-7">
+    <footer class="footer footer-transparent mt-auto py-2 px-4 mt-7">
       <div class="float-start">
         <span class="text-muted">GnuCash Web v{{ pkg_version }} © Joshua Bachmeier (2023), GPLv3+</span>
       </div>
@@ -68,9 +71,22 @@
     {% block modals %}{% endblock %}
 
     <script src="{{ url_for('static', filename='jquery-3.6.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
     <script src="{{ url_for('static', filename='gnucash-web.js') }}"></script>
-    <script src="{{ url_for('static', filename='selectize/js/selectize.min.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='selectize/js/selectize.min.js') }}"></script> -->
+    <script>
+      ;(function () {
+      const htmlElement = document.querySelector("html")
+      if(htmlElement.getAttribute("data-bs-theme") === 'auto') {
+        function updateTheme() {
+          document.querySelector("html").setAttribute("data-bs-theme",
+          window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+        updateTheme()
+      }
+    })()
+    </script>
   </body>
 </html>
 

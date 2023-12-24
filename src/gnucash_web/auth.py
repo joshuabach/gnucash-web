@@ -74,9 +74,9 @@ def login():
        return redirect(request.args.get('return_url') or url_for('.login'))
     else:
         if is_authenticated():
-            return render_template('user.j2', username=session.get('username', 'no one'))
+            return render_template('user.html', username=session.get('username', 'no one'))
         else:
-            return render_template('login.j2')
+            return render_template('login.html')
 
 @bp.route('/logout', methods=['POST'])
 def logout():
