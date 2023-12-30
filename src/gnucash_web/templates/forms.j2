@@ -65,13 +65,20 @@
             Select an account to transfer money to / from
           </div>
           <script>
+            function renderAccountNameBreakable(divClass, text) {
+              return "<div class=\""+divClass+"\">"+text.replaceAll(":", ":<wbr>")+"</div>";
+            }
             document.addEventListener("DOMContentLoaded", function() {
               $("select#{{ id }}_transaction-contra_account_name").removeClass("form-select");
               $("select#{{ id }}_transaction-contra_account_name").selectize({
                 maxItems: 1,
                 items: ["{{ config.PRESELECTED_CONTRA_ACCOUNT }}"],
+                render: {
+                  item: function(contra_account, escape) { return renderAccountNameBreakable("item", contra_account.text) },
+                  option: function(contra_account, escape) { return renderAccountNameBreakable("option", contra_account.text) },
+                },
                 onType: function(text) {
-                  // Workaround for https://github.com/selectize/selectize.js/issues/113
+                  {# Workaround for https://github.com/selectize/selectize.js/issues/113 #}
                   if (text.length <= 1) {
                     this.clear();
                   }
