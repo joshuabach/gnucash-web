@@ -45,7 +45,7 @@ Installation
 ------------
 
 *GnuCash Web* is [available on PyPI](https://pypi.org/project/GnuCash-Web/), so you can
-simply install it via `pip install GnuCash-Web`. Additionally, you may need to install
+simply install it via `pip install gnucash_web`. Additionally, you may need to install
 `mysql` or `psycopg2`, depending on which back end you want to use (sqlite back end is
 included in the python standard library).
 
@@ -291,7 +291,7 @@ understandable. I probably wouldn't either if I were them. Luckily, I am not!
 License
 -------
 
-Copyright © 2022 Joshua Bachmeier <joshua@bachmeier.cc>
+Copyright © 2023 Joshua Bachmeier <joshua@bachmeier.cc>
 
 This program is free software: you can redistribute it and/or modify it under the terms of
 the GNU General Public License as published by the Free Software Foundation, either
