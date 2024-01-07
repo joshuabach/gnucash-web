@@ -1,13 +1,12 @@
 #!python
 from setuptools import setup, find_packages
 from os.path import exists
-import pathlib
 
 readme = open('README.md') if exists('README.md') else open('../README.md')
 version = open('gnucash_web/version.txt')
 
 setup(
-    name='GnuCash Web',
+    name='gnucash_web',
     version=version.read().strip(),
     author='Joshua Bachmeier',
     author_email='joshua@bachmeier.cc',
@@ -38,6 +37,7 @@ setup(
     packages=find_packages(),
     package_data={
         'gnucash_web': [
+            'version.txt',
             'templates/*.j2',
             'static/*.js', 'static/*.css',
             'static/bootstrap/css/*.min.css',

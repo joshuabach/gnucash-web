@@ -1,6 +1,6 @@
 """Flask app for GnuCash Web."""
 import os
-from importlib import metadata
+from pathlib import Path
 
 from flask import Flask, redirect, url_for
 from flask.cli import FlaskGroup
@@ -56,7 +56,7 @@ def create_app(test_config=None):
     app.jinja_env.filters['nth'] = jinja_utils.nth
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
 
-    with open('gnucash_web/version.txt') as version:
+    with (Path(__file__).parent / 'version.txt').open() as version:
         app.jinja_env.globals['pkg_version'] = version.read().strip()
 
     app.register_blueprint(auth.bp)
