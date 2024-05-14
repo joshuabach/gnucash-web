@@ -63,10 +63,12 @@ setup(
         'pycryptodome>=3.12.0',
         'babel>=2.9.1',
         'requests>=2.27.1',
+        'Flask-Session>=0.8.0'
     ],
     extras_require={
         'pgsql': 'psycopg2',
         'mysql': 'mysql',
+        'redis': 'redis'
     },
 
     entry_points={

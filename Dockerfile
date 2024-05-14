@@ -21,7 +21,7 @@ COPY ./README.md ./
 COPY --from=builder /wheels /wheels
 
 RUN apk add libpq  mariadb-client
-RUN pip install -v --no-cache /wheels/* .[pgsql,mysql] gunicorn
+RUN pip install -v --no-cache /wheels/* .[pgsql,mysql,redis] gunicorn
 RUN rm -r /wheels
 
 EXPOSE 8000

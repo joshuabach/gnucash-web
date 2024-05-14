@@ -9,6 +9,10 @@ services:
       POSTGRES_PASSWORD: 'example'
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:7.2.4-alpine
+
   app:
     image: ghcr.io/joshuabach/gnucash-web:main
     environment:
@@ -24,6 +28,9 @@ services:
 
       TRANSACTION_PAGE_LENGTH: 25
       PRESELECTED_CONTRA_ACCOUNT:
+
+      SESSION_TYPE: redis
+      REDIS_HOST: cache
 
     ports:
       - "8000:8000"

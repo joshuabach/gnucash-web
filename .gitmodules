@@ -1,9 +1,6 @@
 [submodule "src/bootstrap"]
 	path = src/bootstrap
 	url = https://github.com/twbs/bootstrap.git
-[submodule "src/EncryptedSession"]
-	path = src/EncryptedSession
-	url = https://github.com/SaintFlipper/EncryptedSession.git
 [submodule "src/gnucash"]
 	path = src/gnucash
 	url = https://github.com/Gnucash/gnucash

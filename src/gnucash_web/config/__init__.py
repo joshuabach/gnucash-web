@@ -5,9 +5,13 @@ from flask import Config
 
 from . import default
 
+USER_CONFIG_HOME = os.environ.get(
+    'XDG_CONFIG_HOME',
+    os.path.join(os.environ['HOME'], '.config')
+)
 CONFIG_FILES = [
     "/etc/gnucash-web/config.py",
-    f'{os.environ["HOME"]}/.config/gnucash-web/config.py',
+    os.path.join(USER_CONFIG_HOME, 'gnucash-web/config.py'),
 ]
 CONFIG_ENVVAR = "GNUCASH_WEB_CONFIG"
 
