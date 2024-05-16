@@ -6,7 +6,7 @@ from math import ceil
 
 from flask import render_template, request, redirect, Blueprint
 from flask import current_app as app
-from piecash import Transaction, Split
+from piecash import Transaction, Split, AccountType
 from werkzeug.exceptions import BadRequest
 
 from .auth import requires_auth, get_db_credentials
@@ -98,6 +98,7 @@ def show_account(account_name):
             today=date.today(),
             num_pages=num_pages,
             page=page,
+            account_types=(t.value for t in AccountType if t != AccountType.root)
         )
 
 
@@ -273,6 +274,66 @@ def del_transaction():
 
         book.delete(transaction)
 
+        book.save()
+
+        return redirect(account_url(account))
+
+@bp.route("/accounts/<guid>", methods=["POST"])
+@requires_auth
+def edit_account(guid):
+    """Edit an existing account.
+
+    All parameters are read from `request.form` except for guid.
+
+    :param guid: GUID of the account to edit
+    :param name: New name for the account
+    :param code: New code for the account
+    :param description: New description for the account
+    :param parent: The GUID of the new parent account
+    :param account_type: The name of the new account type
+    :param commodity: The mnemonic of the new commodity
+    :param commodity_scu: The smallest fraction for the commodity
+    :param placeholder: The placeholder state of the account
+    :param hidden: The hidden state of the account
+    """
+    try:
+        name = request.form["name"]
+        code = request.form["code"]
+        description = request.form["description"]
+        parent = request.form["parent"]
+        account_type = request.form["type"]
+        commodity = request.form["commodity"]
+        commodity_scu = int(request.form["commodity_scu"])
+        placeholder = 1 if request.form.get("placeholder", "off") == "on" else 0
+        hidden = 1 if request.form.get("hidden", "off") == "on" else 0
+    except (InvalidOperation, ValueError) as e:
+        raise BadRequest(f"Invalid form parameter: {e}") from e
+
+    with open_book(
+        uri_conn=app.config.DB_URI(*get_db_credentials()),
+        readonly=False,
+        do_backup=False,
+    ) as book:
+        account = get_account(book, guid=guid)
+        account.name = name
+        account.code = code
+        account.description = description
+        account.type = account_type
+        account.commodity = book.commodities.get(namespace='CURRENCY', mnemonic=commodity)
+        account.placeholder = placeholder
+        account.hidden = hidden
+
+        # workaround for piecash book.accounts not including root
+        account.parent = (
+            book.root_account
+            if parent == book.root_account.guid
+            else get_account(book, guid=parent)
+        )
+        account.commodity_scu = (
+            None # piecash use commodity default
+            if commodity_scu == -1
+            else commodity_scu
+        )
         book.save()
 
         return redirect(account_url(account))

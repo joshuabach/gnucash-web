@@ -24,12 +24,18 @@
 
 {% block content %}
   {% if account.parent %}
-    <div id="total" class="my-3 list-group">
-      <div class="list-group-item">
-        <b>Total</b>
-        <span class="float-end">
-          {{ account.get_balance() | money(account.commodity) }}
-        </span>
+    <div class="container">
+      <div class="row">
+        <div class="me-2 border rounded p-2 col">
+          <b>Total</b>
+          <span class="float-end">
+            {{ account.get_balance() | money(account.commodity) }}
+          </span>
+        </div>
+        <button type="button" class="btn btn-outline-primary bi bi-pencil-fill col-auto"
+                data-bs-toggle="modal" data-bs-target="#account-edit"
+                title="Edit Account"
+        ></button>
       </div>
     </div>
   {% endif %}
@@ -118,6 +124,115 @@
 {% endblock content %}
 
 {% block modals %}
+  {% if account.parent %}
+    <div class="modal fade" id="account-edit">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Account</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="edit_account" method="post" action="{{ url_for('book.edit_account', guid=account.guid) }}">
+              <div class="mb-2">
+                <label for="new_account_name" class="form-label text-body-secondary small">Account Name</label>
+                <input type="text" class="form-control"
+                       name="name" id="new_account_name"
+                       value="{{ account.name }}">
+              </div>
+              <div class="mb-2">
+                <label for="new_account_name" class="form-label text-body-secondary small">Account Code</label>
+                <input type="text" class="form-control"
+                       name="code" id="new_account_code"
+                       value="{{ account.code }}">
+              </div>
+              <div class="mb-2">
+                <label for="new_account_name" class="form-label text-body-secondary small">Description</label>
+                <input type="text" class="form-control"
+                       name="description" id="new_account_desc"
+                       value="{{ account.description }}">
+              </div>
+              <div class="mb-2">
+                <label for="new_account_parent" class="form-label text-body-secondary small">Parent Account</label>
+                <select name="parent" id="new_account_parent" class="form-select">
+                  <option value="{{ book.root_account.guid }}">New top level account</option>
+                  {% for p_account in book.root_account.children | sort(attribute='name') recursive %}
+                    {% if p_account.guid != account.guid %}
+                      <option value="{{ p_account.guid }}"
+                        {% if p_account.guid == account.parent.guid %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ account_type }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-2">
+                <label for="new_account_commodity" class="form-label text-body-secondary small">Commodity</label>
+                <select name="commodity" id="new_account_commodity" class="form-select">
+                  {% for commodity in book.commodities %}
+                    <option value="{{ commodity.mnemonic }}"
+                      {% if account.commodity == commodity %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ commodity.mnemonic }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-2">
+                <label for="new_account_commodity_scu" class="form-label text-body-secondary small">Smallest Fraction</label>
+                <select name="commodity_scu" id="new_account_commodity_scu" class="form-select">
+                  <option value="-1"
+                    {% if account.non_std_scu == 0 %}
+                      selected
+                    {% endif %}
+                  >
+                    Use Commodity Value
+                  </option>
+                  {% for n in range(10) %}
+                    <option value="{{ 10 ** n }}"
+                      {% if account.non_std_scu == 1 and account.commodity_scu == 10 ** n %}
+                        selected
+                      {% endif %}
+                    >
+                      1/{{10 ** n}}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="placeholder" id="new_account_placeholder"
+                  {% if account.placeholder == 1 %}
+                    checked
+                  {% endif %}
+                >
+                <label class="form-check-label" for="new_account_placeholder">Placeholder</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="hidden" id="new_account_hidden"
+                  {% if account.hidden == 1 %}
+                    checked
+                  {% endif %}
+                >
+                <label class="form-check-label" for="new_account_hidden">Hidden</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" form="edit_account" type="submit">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   {% if not account.placeholder and account.parent %}
     <div class="modal fade" id="edit-transaction">
       <div class="modal-dialog">
