@@ -28,7 +28,7 @@
       <div class="list-group-item">
         <b>Total</b>
         <span class="float-end">
-          {{ account.get_balance() | money(account.commodity) }}
+          {{ account | safe_get_balance | money(account.commodity) }}
         </span>
       </div>
     </div>
@@ -54,7 +54,7 @@
           </a>
 
           <span class="float-end">
-            {{ account.get_balance() | money(account.commodity) }}
+            {{ account | safe_get_balance | money(account.commodity) }}
           </span>
         </div>
 

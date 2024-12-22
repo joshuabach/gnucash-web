@@ -54,6 +54,7 @@ def create_app(test_config=None):
     app.jinja_env.filters['full_account_names'] = jinja_utils.full_account_names
     app.jinja_env.filters['contrasplits'] = jinja_utils.contra_splits
     app.jinja_env.filters['nth'] = jinja_utils.nth
+    app.jinja_env.filters['safe_get_balance'] = jinja_utils.safe_get_balance
     app.jinja_env.globals['is_authenticated'] = auth.is_authenticated
 
     with (Path(__file__).parent / 'version.txt').open() as version:

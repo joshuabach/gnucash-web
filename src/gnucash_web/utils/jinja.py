@@ -1,4 +1,5 @@
 """Utilities for templates."""
+import logging
 import re
 from urllib.parse import quote_plus
 from itertools import islice, accumulate
@@ -8,6 +9,7 @@ from flask import url_for
 from babel import numbers
 from markupsafe import Markup, escape
 from jinja2 import Environment, BaseLoader, pass_eval_context
+from piecash import GnucashException
 
 
 def safe_display_string(string):
@@ -59,6 +61,9 @@ def money(eval_ctx, amount, commodity):
     :returns: HTML snippet
 
     """
+    if amount is None:
+        return Markup('<span class="text-danger">Error</span>')
+
     if numbers.get_currency_symbol(commodity.mnemonic) != commodity.mnemonic:
         value = numbers.format_currency(amount, commodity.mnemonic)
     else:
@@ -132,3 +137,12 @@ def contra_splits(split):
 def nth(iterable, n, default=None):
     "Returns the nth item or a default value"
     return next(islice(iterable, n, None), default)
+
+
+def safe_get_balance(account):
+    """Get balance of account, but catch piecash exceptions."""
+    try:
+        return account.get_balance()
+    except GnucashException as e:
+        logging.warning(f"Failed to retrieve balance for account {account}: {e}")
+        return None
