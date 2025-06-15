@@ -16,7 +16,7 @@ services:
 
       LOG_LEVEL: 'WARN'
 
-      DB_DRIVER: 'postgres'
+      DB_DRIVER: 'postgresql'
       DB_NAME: 'gnucash'
       DB_HOST: 'db'
 
