@@ -8,7 +8,8 @@ RUN apk add \
       musl-dev \
       mariadb-dev \
       python3-dev \
-      libpq-dev
+      libpq-dev \
+      mariadb-connector-c
 
 RUN pip wheel --no-cache-dir --wheel-dir /wheels mysql pycryptodome psycopg2
 
